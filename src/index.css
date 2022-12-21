@@ -36,3 +36,12 @@ code {
 .list {
   width: 30%;
 }
+
+.fc .fc-daygrid-day-frame:hover {
+  background: aliceblue;
+  cursor: pointer;
+}
+
+.fc-h-event .fc-event-title-container {
+  cursor: pointer;
+}

@@ -1,42 +1,62 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import List from "./list";
 import { db } from "./Firebase/Firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 function App() {
-  const [data, setData] = useState([]);
+  const [loadData, setLoadData] = useState([]);
+  const [clickDate, setClickDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [filteredData, setFilteredData] = useState([]);
 
   const getData = async () => {
-    await getDocs(collection(db, "date")).then((querySnapshot) => {
-      const newData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        title: doc.id,
-      }));
-      setData(newData);
+    return await getDocs(collection(db, "date")).then((querySnapshot) => {
+      const newData = querySnapshot.docs
+        .map((doc) => ({
+          ...doc.data(),
+          title: doc.id,
+        }))
+        .map((arr) => {
+          return arr.end
+            ? { ...arr, dateList: getDateList(arr.start, arr.end) }
+            : { ...arr };
+        });
+      return newData;
     });
   };
 
   useEffect(() => {
-    getData();
+    getData().then((res) => {
+      setLoadData(res);
+    });
   }, []);
 
-  const [clickDate, setClickDate] = useState(
-    new Date().toISOString().substring(0, 10)
-  );
+  useEffect(() => {
+    setFilteredData([
+      ...loadData.filter((el) => el.start.split("T")[0] === clickDate),
+      ...loadData
+        .filter((list) => list.dateList)
+        .filter((list) => {
+          var test = list.dateList.filter((e) => e === clickDate);
+          if (test.length > 0) return list;
+        }),
+    ]);
+  }, [loadData, clickDate]);
 
   const handleDateClick = (arg) => {
     setClickDate(arg.dateStr);
   };
 
   const handleEventClick = (clickInfo) => {
-    setClickDate(clickInfo.event.startStr.substring(0, 10));
+    setClickDate(clickInfo.event.startStr.split("T")[0]);
   };
 
   const moreClick = (info) => {
-    console.log(info.date.toISOString());
+    setClickDate(info.date.toISOString().split("T")[0]);
     return "month";
   };
 
@@ -50,7 +70,7 @@ function App() {
           minute: "2-digit",
           hour12: false,
         }}
-        events={data}
+        events={loadData}
         headerToolbar={{
           left: "prev today",
           center: "title",
@@ -64,7 +84,7 @@ function App() {
         eventClick={handleEventClick}
         // eventContent={renderEventContent}
       />
-      <List date={clickDate} />
+      <List clickeDate={clickDate} list={filteredData} />
     </div>
   );
 }
@@ -78,6 +98,29 @@ function renderEventContent(eventInfo) {
       <i>{eventInfo.event.title}</i>
     </>
   );
+}
+
+/**
+ *
+ * @param {*} startDate
+ * @param {*} EndDate
+ * @description startDate와 EndDate 사이의 날짜 가져오기
+ */
+function getDateList(startDate, EndDate) {
+  const date1 = new Date(startDate);
+  const date2 = new Date(EndDate);
+  const diff = date2.getTime() - date1.getTime();
+  const diffDay = diff / 1000 / 60 / 60 / 24;
+
+  if (diffDay > 1) {
+    let arr = [];
+    date1.setDate(date1.getDate() + 1);
+    while (date1 < date2) {
+      arr.push(new Date(date1).toISOString().split("T")[0]);
+      date1.setDate(date1.getDate() + 1);
+    }
+    return arr;
+  }
 }
 
 export default App;

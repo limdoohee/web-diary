@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import List from "./list";
+import Info from "./Info";
 import { db } from "./Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -84,7 +84,7 @@ function App() {
         eventClick={handleEventClick}
         // eventContent={renderEventContent}
       />
-      <List clickeDate={clickDate} list={filteredData} />
+      <Info clickeDate={clickDate} data={filteredData} />
     </div>
   );
 }

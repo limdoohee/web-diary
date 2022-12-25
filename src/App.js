@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import Info from "./Info";
+import Detail from "./Detail";
 import { db } from "./Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -18,7 +18,7 @@ function App() {
       const newData = querySnapshot.docs
         .map((doc) => ({
           ...doc.data(),
-          title: doc.id,
+          id: doc.id,
         }))
         .map((arr) => {
           return arr.end
@@ -84,7 +84,7 @@ function App() {
         eventClick={handleEventClick}
         // eventContent={renderEventContent}
       />
-      <Info clickeDate={clickDate} data={filteredData} />
+      <Detail clickeDate={clickDate} data={filteredData} />
     </div>
   );
 }

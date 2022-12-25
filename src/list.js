@@ -6,9 +6,11 @@ const UL = styled.ul`
 `;
 
 const Title = styled.li`
-  font-size: 1.1em;
-  color: rgba(0, 0, 0, 0.8);
   margin-bottom: 0.3em;
+  input {
+    font-size: 1.1em;
+    color: rgba(0, 0, 0, 0.8);
+  }
 `;
 
 const Time = styled.li`
@@ -19,11 +21,20 @@ const Time = styled.li`
 const List = ({ data }) => {
   return (
     <>
-      {data.map((e) => {
+      {data.map((e, i) => {
         return (
-          <UL>
-            <Title key={e.title}>{e.title}</Title>
-            <Time>{e.start}</Time>
+          <UL key={i}>
+            <Title key={e.title}>
+              <input type="text" value={e.title} />
+            </Title>
+            {e.start.split("T")[1] && (
+              <Time>
+                {e.start.split("T")[1].substring(0, 5)}
+                {e.end &&
+                  e.end.split("T")[1] &&
+                  " - " + e.end.split("T")[1].substring(0, 5)}
+              </Time>
+            )}
           </UL>
         );
       })}

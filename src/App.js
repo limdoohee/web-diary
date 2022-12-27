@@ -60,6 +60,10 @@ function App() {
     return "month";
   };
 
+  const changeData = (addData) => {
+    setLoadData([...loadData, addData]);
+  };
+
   return (
     <div className="container">
       <FullCalendar
@@ -84,7 +88,11 @@ function App() {
         eventClick={handleEventClick}
         // eventContent={renderEventContent}
       />
-      <Detail clickeDate={clickDate} data={filteredData} />
+      <Detail
+        clickeDate={clickDate}
+        data={filteredData}
+        changeData={changeData}
+      />
     </div>
   );
 }

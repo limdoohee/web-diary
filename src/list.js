@@ -25,7 +25,7 @@ const List = ({ data }) => {
         return (
           <UL key={i}>
             <Title key={e.title}>
-              <input type="text" value={e.title} />
+              <input type="text" value={e.title} readOnly />
             </Title>
             {e.start.split("T")[1] && (
               <Time>

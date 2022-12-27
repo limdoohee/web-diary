@@ -1,9 +1,9 @@
 import List from "./List";
 import styled from "styled-components";
-import Diary from "./Diary";
-import { useState } from "react";
+// import Diary from "./Diary";
+import { useState, useEffect } from "react";
 import { db } from "./Firebase/Firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 
 const Wrapper = styled.div`
   border-left: 1px solid #ddd;
@@ -42,14 +42,31 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const NewDiary = styled.div`
+  h1 {
+    font-size: 1.75em;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: 300;
+  }
+  textarea {
+    border: 1px solid #ddd;
+    resize: none;
+  }
+`;
+
 const NewList = styled.div``;
 
-const Detail = ({ clickeDate, data }) => {
+const Detail = ({ clickeDate, data, changeData }) => {
   const isDiary = data.filter((e) => e.diary);
   const [isEditDiary, setIsEditDiary] = useState(false);
   const [isAddList, setIsAddList] = useState(false);
 
   const [title, setTitle] = useState("");
+  const [diary, setDiary] = useState("");
+
+  useEffect(() => {
+    isDiary.length > 0 && setDiary(isDiary[0].diary);
+  }, [changeData]);
 
   const addList = () => {
     setIsAddList(!isAddList);
@@ -63,18 +80,43 @@ const Detail = ({ clickeDate, data }) => {
     setTitle(e.target.value);
   };
 
+  const changeDiary = (e) => {
+    setDiary(e.target.value);
+  };
+
   const addHandler = async (e) => {
     e.preventDefault();
 
     try {
-      const docRef = await addDoc(collection(db, "date"), {
-        title: title,
-        start: clickeDate,
-      });
-      console.log("Document written with ID: ", docRef, docRef.id);
+      console.log(isDiary.length);
+      const docRef =
+        isDiary.length > 0
+          ? await updateDoc(doc(db, "date", isDiary[0].id), {
+              start: clickeDate,
+              ...(isAddList && { title: title }),
+              ...(isEditDiary && { diary: diary }),
+            })
+          : await addDoc(collection(db, "date"), {
+              start: clickeDate,
+              ...(isAddList && { title: title }),
+              ...(isEditDiary && { diary: diary }),
+            });
+      changeData({ title: title, start: clickeDate });
+      setIsAddList(false);
+      setIsEditDiary(false);
+      setDiary("");
+      setTitle("");
+      console.log("Document written with ID: ", docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+  };
+
+  const cancelHandler = (e) => {
+    e.preventDefault();
+
+    setIsAddList(false);
+    setIsEditDiary(false);
   };
 
   return (
@@ -84,9 +126,6 @@ const Detail = ({ clickeDate, data }) => {
       </div>
       <div>
         <List data={data} />
-        {isDiary.length > 0 && (
-          <Diary data={isDiary} isEditDiary={isEditDiary} bgColor="red" />
-        )}
         {isAddList && (
           <NewList>
             <input
@@ -98,11 +137,33 @@ const Detail = ({ clickeDate, data }) => {
             />
           </NewList>
         )}
+
+        {isDiary.length > 0 && (
+          <NewDiary>
+            <h1>Diary</h1>
+            <textarea
+              value={diary}
+              // isEditDiary={isEditDiary}
+              onChange={changeDiary}
+            />
+          </NewDiary>
+        )}
+        {isDiary.length === 0 && isEditDiary && (
+          <NewDiary>
+            <h1>Add Diary</h1>
+            <textarea
+              value={diary}
+              placeholder="여기는 아무도 없어요"
+              onChange={changeDiary}
+            />
+          </NewDiary>
+        )}
       </div>
       <BtnWrapper>
-        {isAddList ? (
+        {isAddList || isEditDiary ? (
           <>
             <Button onClick={addHandler}>저장</Button>
+            <Button onClick={cancelHandler}>취소</Button>
           </>
         ) : (
           <>

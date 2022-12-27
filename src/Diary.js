@@ -6,22 +6,24 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 
-const Editor = styled.textarea`
+const Editor = styled.textarea.attrs((isEditDiary) => ({
+  readOnly: isEditDiary ? false : true,
+}))`
   border:  ${({ isEditDiary }) => (isEditDiary ? "1px solid #ddd" : "none")}};
   resize: none;
 `;
 
-const Diary = ({ data, isEditDiary }) => {
+const Diary = ({ diary, isEditDiary, onChange }) => {
   return (
     <>
-      {data.map((e) => {
-        return (
-          <div key={e.id}>
-            <Title>Diary</Title>
-            <Editor value={e.diary} readOnly isEditDiary={isEditDiary} />
-          </div>
-        );
-      })}
+      {/* {data.map((e) => {
+        return ( */}
+      {/* <div key={e.id}> */}
+      <Title>Diary</Title>
+      <Editor value={diary} isEditDiary={isEditDiary} onChange={onChange} />
+      {/* </div> */}
+      {/* );
+      })} */}
     </>
   );
 };

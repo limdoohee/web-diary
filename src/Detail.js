@@ -56,7 +56,7 @@ const NewDiary = styled.div`
 
 const NewList = styled.div``;
 
-const Detail = ({ clickeDate, data, changeData }) => {
+const Detail = ({ clickeDate, data, changeData, deleteData }) => {
   const isDiary = data.filter((e) => e.diary);
   const [isEditDiary, setIsEditDiary] = useState(false);
   const [isAddList, setIsAddList] = useState(false);
@@ -88,7 +88,6 @@ const Detail = ({ clickeDate, data, changeData }) => {
     e.preventDefault();
 
     try {
-      console.log(isDiary.length);
       const docRef =
         isDiary.length > 0
           ? await updateDoc(doc(db, "date", isDiary[0].id), {
@@ -97,11 +96,16 @@ const Detail = ({ clickeDate, data, changeData }) => {
               ...(isEditDiary && { diary: diary }),
             })
           : await addDoc(collection(db, "date"), {
+              id: Math.random().toString(36).substring(2),
               start: clickeDate,
               ...(isAddList && { title: title }),
               ...(isEditDiary && { diary: diary }),
             });
-      changeData({ title: title, start: clickeDate });
+      changeData({
+        id: Math.random().toString(36).substring(2),
+        title: title,
+        start: clickeDate,
+      });
       setIsAddList(false);
       setIsEditDiary(false);
       setDiary("");
@@ -125,7 +129,7 @@ const Detail = ({ clickeDate, data, changeData }) => {
         <Date>{clickeDate}</Date>
       </div>
       <div>
-        <List data={data} />
+        <List data={data} deleteData={deleteData} />
         {isAddList && (
           <NewList>
             <input

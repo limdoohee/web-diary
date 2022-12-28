@@ -64,6 +64,10 @@ function App() {
     setLoadData([...loadData, addData]);
   };
 
+  const deleteData = (removeData) => {
+    setLoadData(loadData.filter((e) => e.id !== removeData.id));
+  };
+
   return (
     <div className="container">
       <FullCalendar
@@ -92,6 +96,7 @@ function App() {
         clickeDate={clickDate}
         data={filteredData}
         changeData={changeData}
+        deleteData={deleteData}
       />
     </div>
   );

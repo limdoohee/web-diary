@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import Detail from "./Detail";
-import { db } from "./Firebase/Firebase";
+import { db } from "../Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 function App() {
@@ -16,10 +16,22 @@ function App() {
   const getData = async () => {
     return await getDocs(collection(db, "date")).then((querySnapshot) => {
       const newData = querySnapshot.docs
-        .map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
+        .map((doc) => {
+          if (!doc.data().title) {
+            return {
+              ...doc.data(),
+              id: doc.id,
+              color: "#FBC252",
+              className: "fc-diary",
+            };
+          } else {
+            return {
+              ...doc.data(),
+              id: doc.id,
+              color: "#A3BB98",
+            };
+          }
+        })
         .map((arr) => {
           return arr.end
             ? { ...arr, dateList: getDateList(arr.start, arr.end) }
@@ -60,12 +72,29 @@ function App() {
     return "month";
   };
 
-  const changeData = (addData) => {
-    setLoadData([...loadData, addData]);
-  };
-
-  const deleteData = (removeData) => {
-    setLoadData(loadData.filter((e) => e.id !== removeData.id));
+  const changeData = (data, type) => {
+    console.log(data, type);
+    switch (type) {
+      case "add":
+        setLoadData([...loadData, data]);
+        break;
+      case "update":
+        setLoadData(
+          [...loadData].map((e) => {
+            if (e.id === data.id) {
+              if (data.title) e.title = data.title;
+              if (data.diary) e.diary = data.diary;
+            }
+            return e;
+          })
+        );
+        break;
+      case "delete":
+        setLoadData(loadData.filter((e) => e.id !== data.id));
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -80,7 +109,7 @@ function App() {
         }}
         events={loadData}
         headerToolbar={{
-          left: "prev today",
+          left: "prev",
           center: "title",
           right: "next",
         }}
@@ -96,7 +125,6 @@ function App() {
         clickeDate={clickDate}
         data={filteredData}
         changeData={changeData}
-        deleteData={deleteData}
       />
     </div>
   );

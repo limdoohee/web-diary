@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Header } from "../style/global";
+import { diaryContentsState } from "../recoil/atoms";
+import { useRecoilState } from "recoil";
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -15,10 +17,11 @@ const Editor = styled.textarea`
 `;
 
 const Diary = ({ data, saveHandler }) => {
-  const [contents, setContents] = useState("");
+  const [contents, setContents] = useRecoilState(diaryContentsState);
+
   useEffect(() => {
-    data ? setContents(data[0].diary) : setContents("");
-  }, [data]);
+    // data ? setContents(data[0].diary) : setContents("");
+  }, [contents]);
 
   const changeHandler = (e) => {
     setContents(e.target.value);

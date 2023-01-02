@@ -10,6 +10,12 @@ import {
   doc,
   collection,
 } from "firebase/firestore";
+import {
+  diaryContentsState,
+  diaryDataState,
+  clickDateState,
+} from "../recoil/atoms";
+import { useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   width: 30%;
@@ -32,25 +38,33 @@ const Date = styled.h1`
   font-weight: 300;
 `;
 
-const Detail = ({ clickeDate, data, changeData }) => {
-  const diaryData = data.filter((e) => e.diary);
-  const [diary, setDiary] = useState(false);
+const Detail = ({ data, changeData }) => {
+  const filteredDiary = data.filter((e) => e.diary);
+  const [diaryContents, setDiaryContents] = useRecoilState(diaryContentsState);
+  const [diaryData, setDiaryData] = useRecoilState(diaryDataState);
+  const [clickDate, setClickDate] = useRecoilState(clickDateState);
 
   useEffect(() => {
-    diaryData.length > 0 ? setDiary(diaryData) : setDiary(false);
+    if (filteredDiary.length > 0) {
+      setDiaryContents(filteredDiary[0].diary);
+      setDiaryData({ id: filteredDiary[0].id, diary: diaryContents });
+    } else {
+      setDiaryContents("");
+      setDiaryData("");
+    }
   }, [data]);
 
   const addHandler = async (data) => {
     console.log(data);
     await addDoc(collection(db, "date"), {
-      start: clickeDate,
+      start: clickDate,
       ...(data.title && { title: data.title }),
       ...(data.diary && { diary: data.diary }),
     }).then((res) => {
       changeData(
         {
           id: res.id,
-          start: clickeDate,
+          start: clickDate,
           ...(data.title && { title: data.title, color: "#A3BB98" }),
           ...(data.diary && {
             diary: data.diary,
@@ -65,14 +79,14 @@ const Detail = ({ clickeDate, data, changeData }) => {
 
   const updateHandler = async (data) => {
     await updateDoc(doc(db, "date", data.id), {
-      start: clickeDate,
+      start: clickDate,
       ...(data.title && { title: data.title }),
       ...(data.diary && { diary: data.diary }),
     }).then(
       changeData(
         {
           id: data.id,
-          start: clickeDate,
+          start: clickDate,
           ...(data.title && { title: data.title }),
           ...(data.diary && { diary: data.diary }),
         },
@@ -114,11 +128,11 @@ const Detail = ({ clickeDate, data, changeData }) => {
   return (
     <Wrapper>
       <div>
-        <Date>{clickeDate}</Date>
+        <Date>{clickDate}</Date>
       </div>
       <div>
         <Task data={data} saveHandler={saveHandler} />
-        <Diary data={diary} saveHandler={saveHandler} />
+        <Diary saveHandler={saveHandler} />
       </div>
     </Wrapper>
   );

@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Task from "./Task";
 import styled from "styled-components";
 import Diary from "../components/Diary";
@@ -10,12 +9,8 @@ import {
   doc,
   collection,
 } from "firebase/firestore";
-import {
-  diaryContentsState,
-  diaryDataState,
-  clickDateState,
-} from "../recoil/atoms";
-import { useRecoilState } from "recoil";
+import { clickDateState, loadData } from "../recoil/atoms";
+import { useRecoilValue, useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   width: 30%;
@@ -38,84 +33,97 @@ const Date = styled.h1`
   font-weight: 300;
 `;
 
-const Detail = ({ data, changeData }) => {
-  const filteredDiary = data.filter((e) => e.diary);
-  const [diaryContents, setDiaryContents] = useRecoilState(diaryContentsState);
-  const [diaryData, setDiaryData] = useRecoilState(diaryDataState);
-  const [clickDate, setClickDate] = useRecoilState(clickDateState);
+const Detail = () => {
+  const [data, setData] = useRecoilState(loadData);
+  const clickDate = useRecoilValue(clickDateState);
+  console.log(data);
 
-  useEffect(() => {
-    if (filteredDiary.length > 0) {
-      setDiaryContents(filteredDiary[0].diary);
-      setDiaryData({ id: filteredDiary[0].id, diary: diaryContents });
-    } else {
-      setDiaryContents("");
-      setDiaryData("");
-    }
-  }, [data]);
-
-  const addHandler = async (data) => {
-    console.log(data);
-    await addDoc(collection(db, "date"), {
-      start: clickDate,
-      ...(data.title && { title: data.title }),
-      ...(data.diary && { diary: data.diary }),
-    }).then((res) => {
-      changeData(
-        {
-          id: res.id,
-          start: clickDate,
-          ...(data.title && { title: data.title, color: "#A3BB98" }),
-          ...(data.diary && {
-            diary: data.diary,
-            color: "#FBC252",
-            className: "fc-diary",
-          }),
-        },
-        "add"
-      );
-    });
-  };
-
-  const updateHandler = async (data) => {
-    await updateDoc(doc(db, "date", data.id), {
-      start: clickDate,
-      ...(data.title && { title: data.title }),
-      ...(data.diary && { diary: data.diary }),
-    }).then(
-      changeData(
-        {
-          id: data.id,
-          start: clickDate,
-          ...(data.title && { title: data.title }),
-          ...(data.diary && { diary: data.diary }),
-        },
-        "update"
-      )
-    );
-  };
-
-  const deleteHandler = async (data) => {
+  const addHandler = async (newData) => {
     try {
-      await deleteDoc(doc(db, "date", data.id)).then(
-        changeData({ id: data.id }, "delete")
-      );
+      await addDoc(collection(db, "date"), {
+        start: clickDate,
+        ...(newData.title && { title: newData.title }),
+        ...(newData.diary && { diary: newData.diary }),
+      }).then((res) => {
+        setData([
+          ...data,
+          {
+            id: res.id,
+            start: clickDate,
+            ...(newData.title && { title: newData.title, color: "#A3BB98" }),
+            ...(newData.diary && {
+              diary: newData.diary,
+              color: "#FBC252",
+              className: "fc-diary",
+            }),
+          },
+        ]);
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
 
-  const saveHandler = async (data, type) => {
+  const updateHandler = async (newData) => {
+    console.log(newData);
+    try {
+      await updateDoc(doc(db, "date", newData.id), {
+        start: clickDate,
+        ...(newData.title && { title: newData.title }),
+        ...(newData.diary && { diary: newData.diary }),
+      }).then((res) => {
+        // const temp = [...data].map((e) => {
+        //   if (e.id === newData.id) {
+        //     if (newData.title) e.title = newData.title;
+        //     if (newData.diary) e.diary = newData.diary;
+        //   }
+        //   return e;
+        // });
+        console.log(
+          [...data].map((e) => {
+            if (e.id === newData.id) {
+              if (newData.title) e.title = newData.title;
+              if (newData.diary) e.diary = newData.diary;
+            }
+            return e;
+          })
+        );
+        setData([
+          {
+            diary: "mdmsmdmf",
+            start: "2022-12-30",
+            id: "5Krf1GpaAxK0qptigt5o",
+            color: "#FBC252",
+            className: "fc-diary",
+          },
+        ]);
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  const deleteHandler = async (newData) => {
+    try {
+      await deleteDoc(doc(db, "date", newData.id)).then((res) => {
+        setData(data.filter((e) => e.id !== newData.id));
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  const saveHandler = async (newData, type) => {
     try {
       switch (type) {
         case "add":
-          addHandler(data);
+          addHandler(newData);
           break;
         case "update":
-          updateHandler(data);
+          updateHandler(newData);
           break;
         case "delete":
-          deleteHandler(data);
+          deleteHandler(newData);
           break;
         default:
           break;
@@ -131,7 +139,7 @@ const Detail = ({ data, changeData }) => {
         <Date>{clickDate}</Date>
       </div>
       <div>
-        <Task data={data} saveHandler={saveHandler} />
+        <Task saveHandler={saveHandler} />
         <Diary saveHandler={saveHandler} />
       </div>
     </Wrapper>

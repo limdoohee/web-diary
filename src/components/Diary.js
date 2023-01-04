@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Header } from "../style/global";
-import { diaryContentsState } from "../recoil/atoms";
+import { diaryDataState } from "../recoil/selector";
 import { useRecoilState } from "recoil";
 
 const Title = styled.h1`
@@ -16,21 +16,21 @@ const Editor = styled.textarea`
   height: 150px;
 `;
 
-const Diary = ({ data, saveHandler }) => {
-  const [contents, setContents] = useRecoilState(diaryContentsState);
+const Diary = ({ saveHandler }) => {
+  const [diaryData, setDiaryData] = useRecoilState(diaryDataState);
+  const [contents, setContents] = useState("");
 
   useEffect(() => {
-    // data ? setContents(data[0].diary) : setContents("");
-  }, [contents]);
+    diaryData ? setContents(diaryData.diary) : setContents("");
+  }, [diaryData]);
 
   const changeHandler = (e) => {
     setContents(e.target.value);
-    // diaryChangeHandler(e.target.value);
   };
 
   const clickHandler = () => {
-    data
-      ? saveHandler({ id: data[0].id, diary: contents }, "update")
+    diaryData
+      ? saveHandler({ id: diaryData.id, diary: contents }, "update")
       : saveHandler({ diary: contents }, "add");
   };
   return (

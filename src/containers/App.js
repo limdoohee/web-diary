@@ -1,33 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import Detail from "./Detail";
-import { clickDateState } from "../recoil/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { initailData } from "../recoil/selector";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { clickDateState, loadData } from "../recoil/atoms";
 
 function App() {
-  const [loadData, setLoadData] = useState([]);
-  const [clickDate, setClickDate] = useRecoilState(clickDateState);
-  const [filteredData, setFilteredData] = useState([]);
-  const data = useRecoilValue(initailData);
-
-  useEffect(() => {
-    setLoadData(data);
-  }, []);
-
-  useEffect(() => {
-    setFilteredData([
-      ...loadData.filter((el) => el.start.split("T")[0] === clickDate),
-      ...loadData
-        .filter((list) => list.dateList)
-        .filter((list) => {
-          var test = list.dateList.filter((e) => e === clickDate);
-          if (test.length > 0) return list;
-        }),
-    ]);
-  }, [loadData, clickDate]);
+  const setClickDate = useSetRecoilState(clickDateState);
+  const data = useRecoilValue(loadData);
 
   const handleDateClick = (arg) => {
     setClickDate(arg.dateStr);
@@ -42,30 +24,6 @@ function App() {
     return "month";
   };
 
-  const changeData = (data, type) => {
-    switch (type) {
-      case "add":
-        setLoadData([...loadData, data]);
-        break;
-      case "update":
-        setLoadData(
-          [...loadData].map((e) => {
-            if (e.id === data.id) {
-              if (data.title) e.title = data.title;
-              if (data.diary) e.diary = data.diary;
-            }
-            return e;
-          })
-        );
-        break;
-      case "delete":
-        setLoadData(loadData.filter((e) => e.id !== data.id));
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <div className="container">
       <FullCalendar
@@ -76,7 +34,7 @@ function App() {
           minute: "2-digit",
           hour12: false,
         }}
-        events={loadData}
+        events={data}
         headerToolbar={{
           left: "prev",
           center: "title",
@@ -90,11 +48,7 @@ function App() {
         eventClick={handleEventClick}
         // eventContent={renderEventContent}
       />
-      <Detail
-        // clickeDate={clickDate}
-        data={filteredData}
-        changeData={changeData}
-      />
+      <Detail />
     </div>
   );
 }

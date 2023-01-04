@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import TaskDetail from "../components/TaskDetail";
 import { Header } from "../style/global";
+import { useRecoilValue } from "recoil";
+import { filtered } from "../recoil/selector";
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -9,10 +11,10 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 
-const Item = ({ data, saveHandler }) => {
+const Item = ({ saveHandler }) => {
   const [isAdd, setIsAdd] = useState(false);
   const [newTitle, setNewTitle] = useState("");
-  // const newTaskRef = useRef();
+  const data = useRecoilValue(filtered);
 
   useEffect(() => {
     setIsAdd(false);

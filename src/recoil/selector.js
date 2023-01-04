@@ -1,10 +1,12 @@
 import { selector } from "recoil";
 import { db } from "../Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { clickDateState, loadData } from "./atoms";
 
 export const initailData = selector({
   key: "initailData",
   get: async ({ get }) => {
+    console.log("initailData selector");
     return await getDocs(collection(db, "date")).then((querySnapshot) => {
       const newData = querySnapshot.docs
         .map((doc) => {
@@ -31,6 +33,37 @@ export const initailData = selector({
       return newData;
     });
   },
+});
+
+export const filtered = selector({
+  key: "filtered",
+  get: ({ get }) => {
+    console.log("filtered selector");
+    const data = get(loadData);
+    const clickDate = get(clickDateState);
+    return [
+      ...data.filter((el) => el.start.split("T")[0] === clickDate),
+      ...data
+        .filter((list) => list.dateList)
+        .filter((list) => {
+          const includeClickDate = list.dateList.filter((e) => e === clickDate);
+          if (includeClickDate.length > 0) return list;
+        }),
+    ];
+  },
+});
+
+export const diaryDataState = selector({
+  key: "diaryDataState",
+  get: ({ get }) => {
+    const filteredData = get(filtered);
+
+    const test =
+      filteredData.length > 0 ? filteredData.filter((e) => e.diary)[0] : "";
+    console.log(test);
+    return test;
+  },
+  set: ({ set }, newValue) => console.log(newValue),
 });
 
 /**

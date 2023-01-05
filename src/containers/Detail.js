@@ -71,33 +71,21 @@ const Detail = () => {
         start: clickDate,
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
-      }).then((res) => {
-        // const temp = [...data].map((e) => {
-        //   if (e.id === newData.id) {
-        //     if (newData.title) e.title = newData.title;
-        //     if (newData.diary) e.diary = newData.diary;
-        //   }
-        //   return e;
-        // });
-        console.log(
-          [...data].map((e) => {
-            if (e.id === newData.id) {
-              if (newData.title) e.title = newData.title;
-              if (newData.diary) e.diary = newData.diary;
-            }
-            return e;
-          })
-        );
+      }).then(
         setData([
+          ...data.filter((e) => e.id !== newData.id),
           {
-            diary: "mdmsmdmf",
-            start: "2022-12-30",
-            id: "5Krf1GpaAxK0qptigt5o",
-            color: "#FBC252",
-            className: "fc-diary",
+            id: newData.id,
+            start: clickDate,
+            ...(newData.title && { title: newData.title, color: "#A3BB98" }),
+            ...(newData.diary && {
+              diary: newData.diary,
+              color: "#FBC252",
+              className: "fc-diary",
+            }),
           },
-        ]);
-      });
+        ])
+      );
     } catch (e) {
       console.error("Error adding document: ", e);
     }

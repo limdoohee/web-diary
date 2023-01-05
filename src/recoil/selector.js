@@ -6,7 +6,6 @@ import { clickDateState, loadData } from "./atoms";
 export const initailData = selector({
   key: "initailData",
   get: async ({ get }) => {
-    console.log("initailData selector");
     return await getDocs(collection(db, "date")).then((querySnapshot) => {
       const newData = querySnapshot.docs
         .map((doc) => {
@@ -38,7 +37,6 @@ export const initailData = selector({
 export const filtered = selector({
   key: "filtered",
   get: ({ get }) => {
-    console.log("filtered selector");
     const data = get(loadData);
     const clickDate = get(clickDateState);
     return [

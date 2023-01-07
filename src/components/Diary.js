@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Header } from "../style/global";
 import { diaryDataState } from "../recoil/selector";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
+import { CiCirclePlus, CiSaveDown1 } from "react-icons/ci";
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -11,13 +12,20 @@ const Title = styled.h1`
 `;
 
 const Editor = styled.textarea`
-  border:  ${({ isEditDiary }) => (isEditDiary ? "1px solid #ddd" : "none")}};
   resize: none;
   height: 150px;
+  width: -webkit-fill-available;
+  padding: 1em;
+  margin: 1em;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 0.2em;
+  &:focus {
+    outline: 1px solid #ddd;
+  }
 `;
 
 const Diary = ({ saveHandler }) => {
-  const [diaryData, setDiaryData] = useRecoilState(diaryDataState);
+  const diaryData = useRecoilValue(diaryDataState);
   const [contents, setContents] = useState("");
 
   useEffect(() => {
@@ -37,7 +45,7 @@ const Diary = ({ saveHandler }) => {
     <>
       <Header>
         <Title>Diary</Title>
-        <button onClick={clickHandler}>저장</button>
+        {contents ? <CiSaveDown1 onClick={clickHandler} /> : <CiCirclePlus />}
       </Header>
       <Editor value={contents} onChange={changeHandler} />
     </>

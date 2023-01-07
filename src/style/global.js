@@ -26,6 +26,7 @@ export const GlobalStyle = createGlobalStyle`
 
 export const Header = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
   border-bottom: 1px solid #ddd;

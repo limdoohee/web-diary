@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react"; // must go before plugins
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import Detail from "./Detail";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { initailData } from "../recoil/selector";
-import { clickDateState, loadData } from "../recoil/atoms";
+import { clickDateState } from "../recoil/atoms";
+import { loadData } from "../recoil/selector";
 
 function App() {
   const setClickDate = useSetRecoilState(clickDateState);
@@ -54,14 +53,14 @@ function App() {
 }
 
 // a custom render function
-function renderEventContent(eventInfo) {
-  console.log(eventInfo);
-  return (
-    <>
-      <b>{eventInfo.timeText}</b>
-      <i>{eventInfo.event.title}</i>
-    </>
-  );
-}
+// function renderEventContent(eventInfo) {
+//   console.log(eventInfo);
+//   return (
+//     <>
+//       <b>{eventInfo.timeText}</b>
+//       <i>{eventInfo.event.title}</i>
+//     </>
+//   );
+// }
 
 export default App;

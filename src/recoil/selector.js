@@ -1,7 +1,7 @@
-import { selector } from "recoil";
+import { selector, atom } from "recoil";
 import { db } from "../Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { clickDateState, loadData } from "./atoms";
+import { clickDateState } from "./atoms";
 
 export const initailData = selector({
   key: "initailData",
@@ -55,11 +55,9 @@ export const diaryDataState = selector({
   key: "diaryDataState",
   get: ({ get }) => {
     const filteredData = get(filtered);
-
-    const test =
-      filteredData.length > 0 ? filteredData.filter((e) => e.diary)[0] : "";
-    console.log(test);
-    return test;
+    return filteredData.length > 0
+      ? filteredData.filter((e) => e.diary)[0]
+      : "";
   },
   set: ({ set }, newValue) => console.log(newValue),
 });
@@ -86,3 +84,15 @@ const getDateList = (startDate, EndDate) => {
     return arr;
   }
 };
+
+/**
+ * firebase에 추가,변경,삭제 후 페이지 전체가 깜빡이지 않고
+ * 캘린더의 내용과 목록데이터만 변경될 수 있도록 별도 state를 둔다.
+ */
+export const loadData = atom({
+  key: "loadData",
+  default: selector({
+    key: "initailData/default",
+    get: () => initailData,
+  }),
+});

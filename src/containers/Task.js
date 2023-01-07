@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import TaskDetail from "../components/TaskDetail";
 import { Header } from "../style/global";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isAddTask, newTitleState } from "../recoil/atoms";
 import { filtered } from "../recoil/selector";
+import { CiCirclePlus } from "react-icons/ci";
+import NewTask from "../components/NewTask";
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -12,8 +15,8 @@ const Title = styled.h1`
 `;
 
 const Item = ({ saveHandler }) => {
-  const [isAdd, setIsAdd] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
+  const [isAdd, setIsAdd] = useRecoilState(isAddTask);
+  const [newTitle, setNewTitle] = useRecoilState(newTitleState);
   const data = useRecoilValue(filtered);
 
   useEffect(() => {
@@ -23,41 +26,15 @@ const Item = ({ saveHandler }) => {
 
   const newTaskAddHandler = () => {
     setIsAdd(true);
-    // newTaskRef.current.focus();
-  };
-
-  const changeHandler = (e) => {
-    setNewTitle(e.target.value);
-  };
-
-  const clickHandler = () => {
-    saveHandler({ title: newTitle }, "add").then(setIsAdd(!isAdd));
-  };
-
-  const cancelHandler = () => {
-    setIsAdd(false);
   };
 
   return (
     <>
       <Header>
         <Title>Task</Title>
-        {!isAdd && <button onClick={newTaskAddHandler}>+</button>}
+        {!isAdd && <CiCirclePlus onClick={newTaskAddHandler} />}
       </Header>
-      {isAdd && (
-        <>
-          <input
-            type="text"
-            value={newTitle}
-            // ref={newTaskRef}
-            placeholder="일정 입력"
-            required
-            onChange={changeHandler}
-          />
-          <button onClick={clickHandler}>저장</button>
-          <button onClick={cancelHandler}>취소</button>
-        </>
-      )}
+      <NewTask saveHandler={saveHandler} />
       {data.map((e) => {
         if (e.title)
           return <TaskDetail data={e} saveHandler={saveHandler} key={e.id} />;

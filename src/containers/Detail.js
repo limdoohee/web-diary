@@ -9,7 +9,8 @@ import {
   doc,
   collection,
 } from "firebase/firestore";
-import { clickDateState, loadData } from "../recoil/atoms";
+import { clickDateState } from "../recoil/atoms";
+import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
@@ -20,7 +21,7 @@ const Wrapper = styled.div`
   > div {
     &:nth-child(1) {
       padding-top: 0.2em;
-      padding-bottom: 1.66em;
+      padding-bottom: 1.54em;
       border-bottom: 1px solid #ddd;
     }
   }
@@ -36,7 +37,6 @@ const Date = styled.h1`
 const Detail = () => {
   const [data, setData] = useRecoilState(loadData);
   const clickDate = useRecoilValue(clickDateState);
-  console.log(data);
 
   const addHandler = async (newData) => {
     try {
@@ -65,7 +65,6 @@ const Detail = () => {
   };
 
   const updateHandler = async (newData) => {
-    console.log(newData);
     try {
       await updateDoc(doc(db, "date", newData.id), {
         start: clickDate,

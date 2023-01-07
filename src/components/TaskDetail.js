@@ -1,18 +1,30 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { CiSaveDown1, CiCircleMinus } from "react-icons/ci";
 
 const UL = styled.ul`
   border-bottom: 1px solid #ddd;
   padding: 1em;
-  display: flex;
-  align-items: flex-start;
+
+  .mgR5 {
+    margin-right: 0.5em;
+  }
 `;
 
 const List = styled.li`
-  margin-bottom: 0.3em;
+  margin-bottom: 0.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   input {
     font-size: 1.1em;
     color: rgba(0, 0, 0, 0.8);
+    padding: 0.3em;
+    border-radius: 0.2em;
+    width: calc(100% - 60px);
+  }
+  input:focus-visible {
+    outline: 1px solid #ddd;
   }
 `;
 
@@ -44,6 +56,12 @@ const TaskDetail = ({ data, saveHandler }) => {
     <UL>
       <List>
         <input type="text" value={title} onChange={changeHandler} />
+        <div>
+          <CiSaveDown1 className="mgR5" onClick={updateHandler} />
+          <CiCircleMinus onClick={deleteHandler} />
+        </div>
+      </List>
+      <li>
         {data.start.split("T")[1] && (
           <Time>
             {data.start.split("T")[1].substring(0, 5)}
@@ -52,10 +70,6 @@ const TaskDetail = ({ data, saveHandler }) => {
               " - " + data.end.split("T")[1].substring(0, 5)}
           </Time>
         )}
-      </List>
-      <li>
-        <button onClick={updateHandler}>저장</button>
-        <button onClick={deleteHandler}>삭제</button>
       </li>
     </UL>
   );

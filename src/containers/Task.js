@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import TaskDetail from "../components/TaskDetail";
 import { Header } from "../style/global";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isAddTask, newTitleState } from "../recoil/atoms";
 import { filtered } from "../recoil/selector";
 import { CiCirclePlus } from "react-icons/ci";
@@ -16,13 +16,13 @@ const Title = styled.h1`
 
 const Item = ({ saveHandler }) => {
   const [isAdd, setIsAdd] = useRecoilState(isAddTask);
-  const [newTitle, setNewTitle] = useRecoilState(newTitleState);
+  const setNewTitle = useSetRecoilState(newTitleState);
   const data = useRecoilValue(filtered);
 
   useEffect(() => {
     setIsAdd(false);
     setNewTitle("");
-  }, [data]);
+  }, [data, setIsAdd, setNewTitle]);
 
   const newTaskAddHandler = () => {
     setIsAdd(true);
@@ -36,8 +36,11 @@ const Item = ({ saveHandler }) => {
       </Header>
       <NewTask saveHandler={saveHandler} />
       {data.map((e) => {
-        if (e.title)
-          return <TaskDetail data={e} saveHandler={saveHandler} key={e.id} />;
+        return e.title ? (
+          <TaskDetail data={e} saveHandler={saveHandler} key={e.id} />
+        ) : (
+          <></>
+        );
       })}
     </>
   );

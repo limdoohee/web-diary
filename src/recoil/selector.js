@@ -45,7 +45,7 @@ export const filtered = selector({
         .filter((list) => list.dateList)
         .filter((list) => {
           const includeClickDate = list.dateList.filter((e) => e === clickDate);
-          if (includeClickDate.length > 0) return list;
+          return includeClickDate.length > 0 && list;
         }),
     ];
   },

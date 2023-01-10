@@ -14,8 +14,11 @@
 <img src="https://img.shields.io/badge/firebase-FFCA28?style=flat&logo=firebase&logoColor=white"/>
 <img src="https://img.shields.io/badge/styled components-DB7093?style=flat&logo=styled-components&logoColor=white"/>
 <br/>
+<a href="https://web-diary-e3eb7.web.app"><img src="https://img.shields.io/badge/Git Actions-2088FF?style=flat&logo=GitHub Actions&logoColor=white"/></a>
 <a href="https://web-diary-e3eb7.web.app"><img src="https://img.shields.io/badge/FullCalendar-2b5ea4?style=flat&logo=Google Calendar&logoColor=white"/></a>
 <a href="https://web-diary-e3eb7.web.app"><img src="https://img.shields.io/badge/react icon-e91e63?style=flat&logo=React&logoColor=white"/></a>
+
+
 <br/>
 <br/>
   

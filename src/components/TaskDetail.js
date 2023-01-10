@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 // import { CiSaveDown1, CiCircleMinus } from "react-icons/ci";
-import { SaveOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Space, Button } from 'antd';
+import { SaveOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Space, Button } from "antd";
 
 const UL = styled.ul`
   border-bottom: 1px solid #ddd;
@@ -59,10 +59,17 @@ const TaskDetail = ({ data, saveHandler }) => {
       <List>
         <input type="text" value={title} onChange={changeHandler} />
         <Space>
-          <Button shape="circle" icon={<SaveOutlined />} onClick={updateHandler}/>
-          <Button shape="circle" icon={<DeleteOutlined />} onClick={deleteHandler}/>
+          <Button
+            shape="circle"
+            icon={<SaveOutlined />}
+            onClick={updateHandler}
+          />
+          <Button
+            shape="circle"
+            icon={<DeleteOutlined />}
+            onClick={deleteHandler}
+          />
         </Space>
-
       </List>
       <li>
         {data.start.split("T")[1] && (

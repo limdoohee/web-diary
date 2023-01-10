@@ -41,7 +41,8 @@ const Detail = () => {
   const addHandler = async (newData) => {
     try {
       await addDoc(collection(db, "date"), {
-        start: clickDate,
+        ...(newData.start ? { start : newData.start} : {start: clickDate}),
+        ...(newData.end && { end: newData.end }),
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
       }).then((res) => {
@@ -49,7 +50,8 @@ const Detail = () => {
           ...data,
           {
             id: res.id,
-            start: clickDate,
+            ...(newData.start ? { start : newData.start} : {start: clickDate}),
+            ...(newData.end && { end: newData.end }),
             ...(newData.title && { title: newData.title, color: "#A3BB98" }),
             ...(newData.diary && {
               diary: newData.diary,

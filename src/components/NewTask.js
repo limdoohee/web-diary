@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { isAddTask, newTitleState } from "../recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { isAddTask, newTitleState, clickDateState } from "../recoil/atoms";
 import { CiSaveDown1, CiCircleRemove } from "react-icons/ci";
 import { DatePicker, Select, Space, TimePicker } from 'antd';
 import dayjs from 'dayjs';
@@ -33,22 +33,15 @@ const InsertTitle = styled.div`
 
 const InsertTime = styled.div``;
 
-const disabledDate = (current) => {
-  return current && current < dayjs().endOf('day');
-};
-
-const PickerWithType = ({ type, onChange }) => {
-  if (type === 'time') return <TimePicker format={"HH:mm"} onChange={onChange} />;
-  if (type === 'date') return <DatePicker onChange={onChange} disabledDate={disabledDate} />;
-  return <DatePicker picker={type} onChange={onChange} />;
-};
-
 const NewTask = ({ saveHandler }) => {
   const [isAdd, setIsAdd] = useRecoilState(isAddTask);
   const [newTitle, setNewTitle] = useRecoilState(newTitleState);
+  const clickDate = useRecoilValue(clickDateState);
   const newTaskRef = useRef();
   const [type, setType] = useState('time');
-
+  const [time, setTime] = useState('');
+  const [end, setEnd] = useState('');
+  
   useEffect(() => {
     newTaskRef.current.focus();
   }, [isAdd]);
@@ -58,13 +51,26 @@ const NewTask = ({ saveHandler }) => {
   };
   const clickHandler = () => {
     setNewTitle("");
-    saveHandler({ title: newTitle }, "add").then(setIsAdd(!isAdd));
+    saveHandler({ title: newTitle, ...(time && {start: clickDate+"T"+new Date(time).toTimeString().split(' ')[0]}), ...(end && {end: new Date(end.$d).toISOString().split('T')[0]})  }, "add").then(() => {setIsAdd(!isAdd); setType(""); setTime(""); setEnd("");});
   };
+
+  const timeChangeHandler = (time, timeString) => {setTime(time); setEnd("");}
+  const endChangeHandler = (date, dateString) => {setEnd(date); setTime("");}
 
   const cancelHandler = () => {
     setNewTitle("");
     setIsAdd(false);
-  };  
+  };
+
+  const disabledDate = (current) => {
+    return current && current < dayjs().endOf('day');
+  };
+
+  const PickerWithType = ({ type }) => {
+    if (type === 'time') return <TimePicker value={time} format={"HH:mm"} onChange={timeChangeHandler} />;
+    if (type === 'date') return <DatePicker value={end} onChange={endChangeHandler} disabledDate={disabledDate} />;
+    return <DatePicker picker={type} onChange={(date, dateString) => setEnd(dateString)} />;
+  };
 
   return (
     <Task isAdd={isAdd}>

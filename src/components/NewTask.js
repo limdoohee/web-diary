@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isAddTask, newTitleState, clickDateState } from "../recoil/atoms";
-import { CiSaveDown1, CiCircleRemove } from "react-icons/ci";
-import { DatePicker, Select, Space, TimePicker } from 'antd';
+import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { DatePicker, Select, Space, TimePicker, Button } from 'antd';
 import dayjs from 'dayjs';
 const { Option } = Select;
 
-const Task = styled.div`
+const Task = styled.ul`
   display: ${({ isAdd }) => (isAdd ? "block" : "none")}};
   border-bottom: 1px solid #ddd;
   padding: 1em;
@@ -16,7 +16,7 @@ const Task = styled.div`
   }
 `;
 
-const InsertTitle = styled.div`
+const InsertTitle = styled.li`
   margin-bottom: 0.5em;
   display: flex;
   justify-content: space-between;
@@ -27,7 +27,7 @@ const InsertTitle = styled.div`
     padding: 0.3em;
     font-size: 1.1em;
     color: rgba(0, 0, 0, 0.8);
-    width: calc(100% - 60px);
+    width: calc(100% - 100px);
   }
 `;
 
@@ -83,10 +83,10 @@ const NewTask = ({ saveHandler }) => {
           required
           onChange={changeHandler}
         />
-        <div>
-          <CiSaveDown1 onClick={clickHandler} className="mgR5" />
-          <CiCircleRemove onClick={cancelHandler} />
-        </div>
+        <Space>
+          <Button shape="circle" icon={<SaveOutlined />} onClick={clickHandler}/>
+          <Button shape="circle" icon={<CloseOutlined />} onClick={cancelHandler}/>
+        </Space>
       </InsertTitle>
       <InsertTime>
         <Space>

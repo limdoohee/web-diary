@@ -5,8 +5,10 @@ import { Header } from "../style/global";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isAddTask, newTitleState } from "../recoil/atoms";
 import { filtered } from "../recoil/selector";
-import { CiCirclePlus } from "react-icons/ci";
+// import { CiCirclePlus } from "react-icons/ci";
 import NewTask from "../components/NewTask";
+import { PlusOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -32,9 +34,9 @@ const Item = ({ saveHandler }) => {
     <>
       <Header>
         <Title>Task</Title>
-        {!isAdd && <CiCirclePlus onClick={newTaskAddHandler} />}
+        {!isAdd && <Button shape="circle" icon={<PlusOutlined />} onClick={newTaskAddHandler}/>}
       </Header>
-      <NewTask saveHandler={saveHandler} />
+      {isAdd && <NewTask saveHandler={saveHandler} />}
       {data.map((e) => {
         return e.title ? (
           <TaskDetail data={e} saveHandler={saveHandler} key={e.id} />

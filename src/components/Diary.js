@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { Header } from "../style/global";
 import { diaryDataState } from "../recoil/selector";
 import { useRecoilValue } from "recoil";
-import { CiCirclePlus, CiSaveDown1 } from "react-icons/ci";
+import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -45,7 +46,7 @@ const Diary = ({ saveHandler }) => {
     <>
       <Header>
         <Title>Diary</Title>
-        {contents ? <CiSaveDown1 onClick={clickHandler} /> : <CiCirclePlus />}
+        {contents ? <Button shape="circle" icon={<SaveOutlined />} onClick={clickHandler}/> : <Button shape="circle" icon={<PlusOutlined />} />}
       </Header>
       <Editor value={contents} onChange={changeHandler} />
     </>

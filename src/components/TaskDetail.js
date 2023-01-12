@@ -80,6 +80,7 @@ const TaskDetail = ({ data, saveHandler }) => {
               " - " + data.end.split("T")[1].substring(0, 5)}
           </Time>
         )}
+        {data.end && <Time>~&nbsp;{data.end}</Time>}
       </li>
     </UL>
   );

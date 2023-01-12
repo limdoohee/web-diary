@@ -15,6 +15,7 @@ export const initailData = selector({
               id: doc.id,
               color: "#FBC252",
               className: "fc-diary",
+              display: "list-item",
             };
           } else {
             return {

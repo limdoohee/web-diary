@@ -25,3 +25,7 @@
 .fc-h-event .fc-event-title-container {
   cursor: pointer;
 }
+
+.fc-daygrid-dot-event .fc-event-title {
+  font-weight: normal !important;
+}

@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isAddTask, newTitleState, clickDateState } from "../recoil/atoms";
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { DatePicker, Select, Space, TimePicker, Button } from 'antd';
-import dayjs from 'dayjs';
+import { SaveOutlined, CloseOutlined } from "@ant-design/icons";
+import { DatePicker, Select, Space, TimePicker, Button } from "antd";
+import dayjs from "dayjs";
 const { Option } = Select;
 
 const Task = styled.ul`
@@ -38,10 +38,10 @@ const NewTask = ({ saveHandler }) => {
   const [newTitle, setNewTitle] = useRecoilState(newTitleState);
   const clickDate = useRecoilValue(clickDateState);
   const newTaskRef = useRef();
-  const [type, setType] = useState('time');
-  const [time, setTime] = useState('');
-  const [end, setEnd] = useState('');
-  
+  const [type, setType] = useState("time");
+  const [time, setTime] = useState("");
+  const [end, setEnd] = useState("");
+
   useEffect(() => {
     newTaskRef.current.focus();
   }, [isAdd]);
@@ -51,11 +51,31 @@ const NewTask = ({ saveHandler }) => {
   };
   const clickHandler = () => {
     setNewTitle("");
-    saveHandler({ title: newTitle, ...(time && {start: clickDate+"T"+new Date(time).toTimeString().split(' ')[0]}), ...(end && {end: new Date(end.$d).toISOString().split('T')[0]})  }, "add").then(() => {setIsAdd(!isAdd); setType(""); setTime(""); setEnd("");});
+    saveHandler(
+      {
+        title: newTitle,
+        ...(time && {
+          start: clickDate + "T" + new Date(time).toTimeString().split(" ")[0],
+        }),
+        ...(end && { end: dayjs(end).format("YYYY-MM-DD") }),
+      },
+      "add"
+    ).then(() => {
+      setIsAdd(!isAdd);
+      setType("");
+      setTime("");
+      setEnd("");
+    });
   };
 
-  const timeChangeHandler = (time, timeString) => {setTime(time); setEnd("");}
-  const endChangeHandler = (date, dateString) => {setEnd(date); setTime("");}
+  const timeChangeHandler = (time, timeString) => {
+    setTime(time);
+    setEnd("");
+  };
+  const endChangeHandler = (date, dateString) => {
+    setEnd(date);
+    setTime("");
+  };
 
   const cancelHandler = () => {
     setNewTitle("");
@@ -63,13 +83,36 @@ const NewTask = ({ saveHandler }) => {
   };
 
   const disabledDate = (current) => {
-    return current && current < dayjs().endOf('day');
+    return current && current < dayjs(clickDate, "YYYY-MM-DD").add(1, "day");
   };
 
   const PickerWithType = ({ type }) => {
-    if (type === 'time') return <TimePicker value={time} format={"HH:mm"} onChange={timeChangeHandler} />;
-    if (type === 'date') return <DatePicker value={end} onChange={endChangeHandler} disabledDate={disabledDate} />;
-    return <DatePicker picker={type} onChange={(date, dateString) => setEnd(dateString)} />;
+    if (type === "time")
+      return (
+        <TimePicker
+          value={time}
+          format={"HH:mm"}
+          onChange={timeChangeHandler}
+          readOnly="true"
+          inputReadOnly="true"
+        />
+      );
+    if (type === "date")
+      return (
+        <DatePicker
+          value={end}
+          onChange={endChangeHandler}
+          disabledDate={disabledDate}
+          readOnly="true"
+          inputReadOnly="true"
+        />
+      );
+    return (
+      <DatePicker
+        picker={type}
+        onChange={(date, dateString) => setEnd(dateString)}
+      />
+    );
   };
 
   return (
@@ -84,8 +127,16 @@ const NewTask = ({ saveHandler }) => {
           onChange={changeHandler}
         />
         <Space>
-          <Button shape="circle" icon={<SaveOutlined />} onClick={clickHandler}/>
-          <Button shape="circle" icon={<CloseOutlined />} onClick={cancelHandler}/>
+          <Button
+            shape="circle"
+            icon={<SaveOutlined />}
+            onClick={clickHandler}
+          />
+          <Button
+            shape="circle"
+            icon={<CloseOutlined />}
+            onClick={cancelHandler}
+          />
         </Space>
       </InsertTitle>
       <InsertTime>
@@ -94,7 +145,7 @@ const NewTask = ({ saveHandler }) => {
             <Option value="time">Time</Option>
             <Option value="date">End</Option>
           </Select>
-          <PickerWithType type={type}/>
+          <PickerWithType type={type} />
         </Space>
       </InsertTime>
     </Task>

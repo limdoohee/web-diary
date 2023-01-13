@@ -71,7 +71,8 @@ const Detail = () => {
   const updateHandler = async (newData) => {
     try {
       await updateDoc(doc(db, "date", newData.id), {
-        start: clickDate,
+        ...(newData.start ? { start: newData.start } : { start: clickDate }),
+        ...(newData.end && { end: newData.end }),
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
       }).then(
@@ -79,7 +80,10 @@ const Detail = () => {
           ...data.filter((e) => e.id !== newData.id),
           {
             id: newData.id,
-            start: clickDate,
+            ...(newData.start
+              ? { start: newData.start }
+              : { start: clickDate }),
+            ...(newData.end && { end: newData.end }),
             ...(newData.title && { title: newData.title, color: "#A3BB98" }),
             ...(newData.diary && {
               diary: newData.diary,

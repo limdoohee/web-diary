@@ -94,7 +94,7 @@ const NewTask = ({ saveHandler }) => {
           format={"HH:mm"}
           onChange={timeChangeHandler}
           readOnly="true"
-          inputReadOnly="true"
+          inputReadOnly={true}
         />
       );
     if (type === "date")
@@ -104,7 +104,7 @@ const NewTask = ({ saveHandler }) => {
           onChange={endChangeHandler}
           disabledDate={disabledDate}
           readOnly="true"
-          inputReadOnly="true"
+          inputReadOnly={true}
         />
       );
     return (

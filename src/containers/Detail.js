@@ -12,6 +12,7 @@ import {
 import { clickDateState } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
+import { message } from "antd";
 
 const Wrapper = styled.div`
   width: 30%;
@@ -38,6 +39,16 @@ const Detail = () => {
   const [data, setData] = useRecoilState(loadData);
   const clickDate = useRecoilValue(clickDateState);
 
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const success = (message) => {
+    messageApi.open({
+      type: "success",
+      content: `successfully ${message}!`,
+      duration: 2,
+    });
+  };
+
   const addHandler = async (newData) => {
     try {
       await addDoc(collection(db, "date"), {
@@ -46,6 +57,7 @@ const Detail = () => {
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
       }).then((res) => {
+        success("saved");
         setData([
           ...data,
           {
@@ -75,7 +87,8 @@ const Detail = () => {
         ...(newData.end && { end: newData.end }),
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
-      }).then(
+      }).then((res) => {
+        success("updated");
         setData([
           ...data.filter((e) => e.id !== newData.id),
           {
@@ -91,8 +104,8 @@ const Detail = () => {
               className: "fc-diary",
             }),
           },
-        ])
-      );
+        ]);
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -101,6 +114,7 @@ const Detail = () => {
   const deleteHandler = async (newData) => {
     try {
       await deleteDoc(doc(db, "date", newData.id)).then((res) => {
+        success("deleted");
         setData(data.filter((e) => e.id !== newData.id));
       });
     } catch (e) {
@@ -130,6 +144,7 @@ const Detail = () => {
 
   return (
     <Wrapper>
+      {contextHolder}
       <div>
         <Date>{clickDate}</Date>
       </div>

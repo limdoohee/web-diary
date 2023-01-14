@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { Header } from "../style/global";
 import { diaryDataState } from "../recoil/selector";
 import { useRecoilValue } from "recoil";
-import { PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { SaveOutlined } from "@ant-design/icons";
+import { Button, message } from "antd";
 
 const Title = styled.h1`
   font-size: 1.75em;
@@ -28,6 +28,8 @@ const Editor = styled.textarea`
 const Diary = ({ saveHandler }) => {
   const diaryData = useRecoilValue(diaryDataState);
   const [contents, setContents] = useState("");
+  const [messageApi, contextHolder] = message.useMessage();
+  const contentsRef = useRef();
 
   useEffect(() => {
     diaryData ? setContents(diaryData.diary) : setContents("");
@@ -38,17 +40,27 @@ const Diary = ({ saveHandler }) => {
   };
 
   const clickHandler = () => {
-    diaryData
-      ? saveHandler({ id: diaryData.id, diary: contents }, "update")
-      : saveHandler({ diary: contents }, "add");
+    if (contents.trim() === "") {
+      messageApi.open({
+        type: "warning",
+        content: "Please, enter your diary",
+        duration: 2,
+      });
+      contentsRef.current.focus();
+    } else {
+      diaryData
+        ? saveHandler({ id: diaryData.id, diary: contents }, "update")
+        : saveHandler({ diary: contents }, "add");
+    }
   };
   return (
     <>
+      {contextHolder}
       <Header>
         <Title>Diary</Title>
-        {contents ? <Button shape="circle" icon={<SaveOutlined />} onClick={clickHandler}/> : <Button shape="circle" icon={<PlusOutlined />} />}
+        <Button shape="circle" icon={<SaveOutlined />} onClick={clickHandler} />
       </Header>
-      <Editor value={contents} onChange={changeHandler} />
+      <Editor value={contents} onChange={changeHandler} ref={contentsRef} />
     </>
   );
 };

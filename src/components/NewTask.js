@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isAddTask, newTitleState, clickDateState } from "../recoil/atoms";
 import { SaveOutlined, CloseOutlined } from "@ant-design/icons";
-import { DatePicker, Select, Space, TimePicker, Button } from "antd";
+import { DatePicker, Select, Space, TimePicker, Button, message } from "antd";
 import dayjs from "dayjs";
 const { Option } = Select;
 
@@ -41,6 +41,7 @@ const NewTask = ({ saveHandler }) => {
   const [type, setType] = useState("time");
   const [time, setTime] = useState("");
   const [end, setEnd] = useState("");
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     newTaskRef.current.focus();
@@ -50,22 +51,32 @@ const NewTask = ({ saveHandler }) => {
     setNewTitle(e.target.value);
   };
   const clickHandler = () => {
-    setNewTitle("");
-    saveHandler(
-      {
-        title: newTitle,
-        ...(time && {
-          start: clickDate + "T" + new Date(time).toTimeString().split(" ")[0],
-        }),
-        ...(end && { end: dayjs(end).format("YYYY-MM-DD") }),
-      },
-      "add"
-    ).then(() => {
-      setIsAdd(!isAdd);
-      setType("");
-      setTime("");
-      setEnd("");
-    });
+    if (newTitle.trim() === "") {
+      messageApi.open({
+        type: "warning",
+        content: "Please enter your task",
+        duration: 2,
+      });
+      newTaskRef.current.focus();
+    } else {
+      saveHandler(
+        {
+          title: newTitle,
+          ...(time && {
+            start:
+              clickDate + "T" + new Date(time).toTimeString().split(" ")[0],
+          }),
+          ...(end && { end: dayjs(end).format("YYYY-MM-DD") }),
+        },
+        "add"
+      ).then(() => {
+        setIsAdd(!isAdd);
+        setNewTitle("");
+        setType("");
+        setTime("");
+        setEnd("");
+      });
+    }
   };
 
   const timeChangeHandler = (time, timeString) => {
@@ -117,6 +128,7 @@ const NewTask = ({ saveHandler }) => {
 
   return (
     <Task isAdd={isAdd}>
+      {contextHolder}
       <InsertTitle>
         <input
           type="text"

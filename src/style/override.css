@@ -1,0 +1,101 @@
+.fc {
+  width: 65%;
+  height: 100%;
+  padding: 0 4%;
+  margin: 0 auto;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.5em;
+  font-weight: 300;
+  color: #808080;
+}
+.fc .fc-toolbar.fc-header-toolbar {
+  margin: 2em 0;
+}
+.fc .fc-daygrid-day-frame:hover {
+  cursor: pointer;
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 4px 0.4em 2px;
+}
+
+.fc .fc-daygrid-day-frame:hover .fc-daygrid-day-number,
+.fc-daygrid-day.selected .fc-daygrid-day-number {
+  background: rgb(134, 177, 205, 0.5);
+  border-radius: 0.2em;
+}
+
+.fc-h-event .fc-event-title-container {
+  cursor: pointer;
+}
+
+.fc-daygrid-dot-event .fc-event-title {
+  font-weight: normal !important;
+}
+
+.fc .fc-button {
+  padding: 0.4em;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc-theme-standard .fc-scrollgrid {
+  border: none;
+}
+
+.fc .fc-button:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
+.fc .fc-button-primary:not(:disabled):active:focus {
+  box-shadow: none;
+}
+
+.fc .fc-button-primary:hover,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
+.fc .fc-button-primary:not(:disabled):active:focus {
+  padding: 0.4em;
+  background-color: #f0f0f0;
+  border-radius: 1.5em;
+}
+
+.fc
+  .fc-button-primary:not(:disabled):active:focus
+  .fc-icon-chevron-right:before,
+.fc
+  .fc-button-primary:not(:disabled):active:focus
+  .fc-icon-chevron-left:before {
+  color: #999999;
+}
+
+* .fc-icon-chevron-right:before,
+* .fc-icon-chevron-left:before {
+  transition: 0.2s all ease-out;
+}
+
+.fc .fc-col-header-cell-cushion {
+  font-weight: 300;
+  color: #808080;
+}
+
+* .fc .fc-daygrid-day-top {
+  justify-content: center;
+}
+
+.fc .fc-day-other {
+  opacity: 0.3;
+}
+
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.2em;
+}
+
+.fc-daygrid-dot-event.fc-event-mirror,
+.fc-daygrid-dot-event:hover,
+.fc .fc-highlight,
+.fc .fc-daygrid-day.fc-day-today,
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background: none;
+}

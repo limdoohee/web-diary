@@ -9,7 +9,7 @@ const { Option } = Select;
 
 const Task = styled.ul`
   display: ${({ isAdd }) => (isAdd ? "block" : "none")}};
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eee;
   padding: 1em;
   .mgR5 {
     margin-right: 0.5em;

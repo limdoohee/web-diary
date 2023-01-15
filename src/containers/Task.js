@@ -11,8 +11,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 
 const Title = styled.h1`
-  font-size: 1.75em;
-  color: rgba(0, 0, 0, 0.3);
+  font-size: 1em;
+  color: #808080;
   font-weight: 300;
 `;
 
@@ -31,7 +31,7 @@ const Item = ({ saveHandler }) => {
   };
 
   return (
-    <>
+    <li>
       <Header>
         <Title>Task</Title>
         {!isAdd && (
@@ -50,7 +50,7 @@ const Item = ({ saveHandler }) => {
           )
         );
       })}
-    </>
+    </li>
   );
 };
 

@@ -3,29 +3,16 @@
   align-items: center;
   width: 100%;
   height: 100vh;
+  background: #f0f1f4;
 }
 
 .container {
   display: flex;
   justify-content: center;
-  width: 100%;
-  height: 80vh;
-}
-
-.fc {
-  width: 60%;
-  height: 100%;
-}
-
-.fc .fc-daygrid-day-frame:hover {
-  background: aliceblue;
-  cursor: pointer;
-}
-
-.fc-h-event .fc-event-title-container {
-  cursor: pointer;
-}
-
-.fc-daygrid-dot-event .fc-event-title {
-  font-weight: normal !important;
+  width: 90%;
+  height: 85vh;
+  background: #fff;
+  margin: 0 auto;
+  border-radius: 0.5em;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
 }

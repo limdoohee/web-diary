@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 const { Option } = Select;
 
 const UL = styled.ul`
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eee;
   padding: 1em;
 
   .mgR5 {
@@ -32,11 +32,11 @@ const List = styled.li`
 const Title = styled.input`
   font-size: 1.1em;
   color: rgba(0, 0, 0, 0.8);
-  padding: 0.3em;
+  padding: 0.3em 0;
   border-radius: 0.2em;
   width: calc(100% - 100px);
   border : ${(props) =>
-    props.edit === "editing" ? "1px solid #ddd" : "none"}};
+    props.edit === "editing" ? "1px solid #eee" : "none"}};
   &:focus-visible {
     outline: none;
   }

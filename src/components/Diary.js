@@ -7,8 +7,8 @@ import { SaveOutlined } from "@ant-design/icons";
 import { Button, message } from "antd";
 
 const Title = styled.h1`
-  font-size: 1.75em;
-  color: rgba(0, 0, 0, 0.3);
+  font-size: 1em;
+  color: #808080;
   font-weight: 300;
 `;
 
@@ -24,6 +24,8 @@ const Editor = styled.textarea`
     outline: 1px solid #ddd;
   }
 `;
+
+const DiaryWrapper = styled.li``;
 
 const Diary = ({ saveHandler }) => {
   const diaryData = useRecoilValue(diaryDataState);
@@ -54,14 +56,14 @@ const Diary = ({ saveHandler }) => {
     }
   };
   return (
-    <>
+    <DiaryWrapper>
       {contextHolder}
       <Header>
         <Title>Diary</Title>
         <Button shape="circle" icon={<SaveOutlined />} onClick={clickHandler} />
       </Header>
       <Editor value={contents} onChange={changeHandler} ref={contentsRef} />
-    </>
+    </DiaryWrapper>
   );
 };
 

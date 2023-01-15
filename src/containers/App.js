@@ -5,12 +5,16 @@ import Detail from "./Detail";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { clickDateState } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
+import "../style/override.css";
 
 function App() {
   const setClickDate = useSetRecoilState(clickDateState);
   const data = useRecoilValue(loadData);
+  const hasClass = document.querySelector(".selected");
 
   const handleDateClick = (arg) => {
+    hasClass && hasClass.classList.remove("selected");
+    arg.dayEl.className += " selected";
     setClickDate(arg.dateStr);
   };
 

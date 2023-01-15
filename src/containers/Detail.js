@@ -12,31 +12,49 @@ import {
 import { clickDateState } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
+import { message } from "antd";
 
 const Wrapper = styled.div`
-  width: 30%;
+  width: 35%;
   display: flex;
   flex-direction: column;
   font-size: 1em;
+  border-left: 1px solid #eee;
+  padding: 0 2.5%;
   > div {
     &:nth-child(1) {
-      padding-top: 0.2em;
-      padding-bottom: 1.54em;
-      border-bottom: 1px solid #ddd;
+      margin: 2.2em 0 1.5em;
     }
   }
 `;
 
 const Date = styled.h1`
   text-align: center;
-  font-size: 1.75em;
-  color: rgba(0, 0, 0, 0.3);
+  font-size: 1.5em;
+  color: #808080;
   font-weight: 300;
+`;
+
+const ContentsWrapper = styled.ul`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
 `;
 
 const Detail = () => {
   const [data, setData] = useRecoilState(loadData);
   const clickDate = useRecoilValue(clickDateState);
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const success = (message) => {
+    messageApi.open({
+      type: "success",
+      content: `successfully ${message}!`,
+      duration: 2,
+    });
+  };
 
   const addHandler = async (newData) => {
     try {
@@ -46,6 +64,7 @@ const Detail = () => {
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
       }).then((res) => {
+        success("saved");
         setData([
           ...data,
           {
@@ -59,6 +78,7 @@ const Detail = () => {
               diary: newData.diary,
               color: "#FBC252",
               className: "fc-diary",
+              display: "list-item",
             }),
           },
         ]);
@@ -75,7 +95,8 @@ const Detail = () => {
         ...(newData.end && { end: newData.end }),
         ...(newData.title && { title: newData.title }),
         ...(newData.diary && { diary: newData.diary }),
-      }).then(
+      }).then((res) => {
+        success("updated");
         setData([
           ...data.filter((e) => e.id !== newData.id),
           {
@@ -89,10 +110,11 @@ const Detail = () => {
               diary: newData.diary,
               color: "#FBC252",
               className: "fc-diary",
+              display: "list-item",
             }),
           },
-        ])
-      );
+        ]);
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -101,6 +123,7 @@ const Detail = () => {
   const deleteHandler = async (newData) => {
     try {
       await deleteDoc(doc(db, "date", newData.id)).then((res) => {
+        success("deleted");
         setData(data.filter((e) => e.id !== newData.id));
       });
     } catch (e) {
@@ -130,13 +153,14 @@ const Detail = () => {
 
   return (
     <Wrapper>
+      {contextHolder}
       <div>
         <Date>{clickDate}</Date>
       </div>
-      <div>
+      <ContentsWrapper>
         <Task saveHandler={saveHandler} />
         <Diary saveHandler={saveHandler} />
-      </div>
+      </ContentsWrapper>
     </Wrapper>
   );
 };

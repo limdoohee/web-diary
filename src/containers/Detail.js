@@ -32,7 +32,7 @@ const Date = styled.h1`
   text-align: center;
   font-size: 1.5em;
   color: #808080;
-  font-weight: 300;
+  font-weight: 100;
 `;
 
 const ContentsWrapper = styled.ul`

@@ -13,7 +13,7 @@ import { Button } from "antd";
 const Title = styled.h1`
   font-size: 1em;
   color: #808080;
-  font-weight: 300;
+  font-weight: 100;
 `;
 
 const Item = ({ saveHandler }) => {

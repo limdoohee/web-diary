@@ -32,7 +32,7 @@ const List = styled.li`
 const Title = styled.input`
   font-size: 1.1em;
   color: rgba(0, 0, 0, 0.8);
-  padding: 0.3em 0;
+  padding: ${(props) => (props.edit === "editing" ? "0.3em" : "0.3em 0")}};
   border-radius: 0.2em;
   width: calc(100% - 100px);
   border : ${(props) =>

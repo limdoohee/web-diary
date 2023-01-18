@@ -26,7 +26,7 @@ const Container = styled.div`
 
   .fc .fc-toolbar-title {
     font-size: 1.5em;
-    font-weight: 300;
+    font-weight: 100;
     color: #808080;
   }
   .fc .fc-toolbar.fc-header-toolbar {
@@ -37,7 +37,7 @@ const Container = styled.div`
   }
 
   .fc .fc-daygrid-day-number {
-    padding: 4px 0.4em 2px;
+    padding: 2px 4px;
   }
 
   .fc .fc-daygrid-day-frame:hover .fc-daygrid-day-number,
@@ -93,7 +93,7 @@ const Container = styled.div`
   }
 
   .fc .fc-col-header-cell-cushion {
-    font-weight: 300;
+    font-weight: 100;
     color: #808080;
   }
 

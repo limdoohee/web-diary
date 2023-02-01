@@ -6,16 +6,26 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { clickDateState } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
 import styled from "styled-components";
+import UserInfo from "../components/Header";
 
-const Container = styled.div`
+const Wrapper = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
   width: 90%;
   height: 87vh;
   background: #fff;
   margin: 0 auto;
-  border-radius: 0.5em;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 0.7em;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.03);
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  flex: 1 0 auto;
+  background: #fff;
+  border-radius: 0.7em;
 
   .fc {
     width: 65%;
@@ -148,31 +158,34 @@ function App() {
   };
 
   return (
-    <Container>
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        eventTimeFormat={{
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        }}
-        events={data}
-        headerToolbar={{
-          left: "prev",
-          center: "title",
-          right: "next",
-        }}
-        dateClick={handleDateClick}
-        dayMaxEvents={true}
-        moreLinkClick={moreClick}
-        // editable={true}
-        // selectMirror={true}
-        eventClick={handleEventClick}
-        // eventContent={renderEventContent}
-      />
-      <Detail />
-    </Container>
+    <Wrapper>
+      <UserInfo />
+      <Container>
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          eventTimeFormat={{
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }}
+          events={data}
+          headerToolbar={{
+            left: "prev",
+            center: "title",
+            right: "next",
+          }}
+          dateClick={handleDateClick}
+          dayMaxEvents={true}
+          moreLinkClick={moreClick}
+          // editable={true}
+          // selectMirror={true}
+          eventClick={handleEventClick}
+          // eventContent={renderEventContent}
+        />
+        <Detail />
+      </Container>
+    </Wrapper>
   );
 }
 

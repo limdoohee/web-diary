@@ -14,10 +14,10 @@ const Title = styled.h1`
 
 const Editor = styled.textarea`
   resize: none;
-  height: 150px;
+  height: 16em;
   width: -webkit-fill-available;
   padding: 1em;
-  margin: 1em;
+  margin: 1em 1em 3em;
   background: rgba(0, 0, 0, 0.03);
   border-radius: 0.2em;
   &:focus {

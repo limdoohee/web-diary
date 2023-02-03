@@ -14,3 +14,8 @@ export const newTitleState = atom({
   key: "newTitleState",
   default: "",
 });
+
+export const userUID = atom({
+  key: "userUID",
+  default: "temp",
+});

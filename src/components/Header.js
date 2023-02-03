@@ -6,14 +6,30 @@ import {
   GoogleAuthProvider,
   getRedirectResult,
 } from "firebase/auth";
+import { useRecoilState } from "recoil";
+import { userUID } from "../recoil/atoms";
 
 const Header = styled.header`
   border-bottom: 1px solid #f0f1f4;
   height: 4em;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
   padding: 1em;
+`;
+
+const NotLoggedIn = styled.div`
+  flex: 1 0 auto;
+  text-align: left;
+  font-size: 0.9em;
+  color: #ccc;
+  font-weight: 300;
+`;
+
+const LoginButton = styled.button`
+  cursor: pointer;
+  text-align: right;
+  font-size: 0.9em;
 `;
 
 const auth = getAuth();
@@ -21,49 +37,40 @@ const provider = new GoogleAuthProvider();
 
 const UserInfo = () => {
   const [userName, setUserName] = useState(null);
+  const [userID, setUserID] = useRecoilState(userUID);
 
   useEffect(() => {
     loginHandler();
   }, []);
 
-  async function loginHandler() {
+  const loginHandler = async () => {
     try {
       const result = await getRedirectResult(auth);
-      result !== null && setUserName(result.user.displayName);
+      if (result !== null) {
+        setUserID(result.user.uid);
+        setUserName(result.user.displayName);
+      }
     } catch (error) {
       throw error;
     }
-  }
+  };
 
-  function login() {
-    signInWithRedirect(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
+  const login = () => {
+    signInWithRedirect(auth, provider);
+  };
 
   return (
     <Header>
-      <button onClick={userName === null ? login : undefined}>
+      <NotLoggedIn>
+        {userName === null
+          ? "아래는 테스트 데이터입니다. 로그인해서 프라이빗한 기록도 즐겨보세요"
+          : ""}
+      </NotLoggedIn>
+      <LoginButton onClick={userName === null ? login : undefined}>
         {userName === null
           ? "로그인해주세요"
           : `${userName}님, 오늘을 기록할까요?`}
-      </button>
+      </LoginButton>
     </Header>
   );
 };

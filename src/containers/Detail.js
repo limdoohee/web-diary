@@ -9,7 +9,7 @@ import {
   doc,
   collection,
 } from "firebase/firestore";
-import { clickDateState } from "../recoil/atoms";
+import { clickDateState, userUID } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { message } from "antd";
@@ -45,7 +45,7 @@ const ContentsWrapper = styled.ul`
 const Detail = () => {
   const [data, setData] = useRecoilState(loadData);
   const clickDate = useRecoilValue(clickDateState);
-
+  const userID = useRecoilValue(userUID);
   const [messageApi, contextHolder] = message.useMessage();
 
   const success = (message) => {
@@ -58,7 +58,7 @@ const Detail = () => {
 
   const addHandler = async (newData) => {
     try {
-      await addDoc(collection(db, "date"), {
+      await addDoc(collection(db, `data/${userID}/list`), {
         ...(newData.start ? { start: newData.start } : { start: clickDate }),
         ...(newData.end && { end: newData.end }),
         ...(newData.title && { title: newData.title }),
@@ -90,7 +90,7 @@ const Detail = () => {
 
   const updateHandler = async (newData) => {
     try {
-      await updateDoc(doc(db, "date", newData.id), {
+      await updateDoc(doc(db, `data/${userID}/list`, newData.id), {
         ...(newData.start ? { start: newData.start } : { start: clickDate }),
         ...(newData.end && { end: newData.end }),
         ...(newData.title && { title: newData.title }),
@@ -122,10 +122,12 @@ const Detail = () => {
 
   const deleteHandler = async (newData) => {
     try {
-      await deleteDoc(doc(db, "date", newData.id)).then((res) => {
-        success("deleted");
-        setData(data.filter((e) => e.id !== newData.id));
-      });
+      await deleteDoc(doc(db, `data/${userID}/list`, newData.id)).then(
+        (res) => {
+          success("deleted");
+          setData(data.filter((e) => e.id !== newData.id));
+        }
+      );
     } catch (e) {
       console.error("Error adding document: ", e);
     }

@@ -27,7 +27,7 @@ const NotLoggedIn = styled.div`
 `;
 
 const LoginButton = styled.button`
-  cursor: pointer;
+  cursor: ${(props) => props.userName === null && "pointer"};
   text-align: right;
   font-size: 0.9em;
 `;
@@ -66,7 +66,10 @@ const UserInfo = () => {
           ? "아래는 테스트 데이터입니다. 로그인해서 프라이빗한 기록도 즐겨보세요"
           : ""}
       </NotLoggedIn>
-      <LoginButton onClick={userName === null ? login : undefined}>
+      <LoginButton
+        userName={userName}
+        onClick={userName === null ? login : undefined}
+      >
         {userName === null
           ? "로그인해주세요"
           : `${userName}님, 오늘을 기록할까요?`}

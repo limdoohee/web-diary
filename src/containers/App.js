@@ -42,18 +42,26 @@ const Container = styled.div`
   .fc .fc-toolbar.fc-header-toolbar {
     margin: 2em 0;
   }
-  .fc .fc-daygrid-day-frame:hover {
-    cursor: pointer;
-  }
+  // .fc .fc-daygrid-day-frame:hover {
+  //   cursor: pointer;
+  // }
 
   .fc .fc-daygrid-day-number {
-    padding: 2px 4px;
+    padding: 2px 0;
+    width: 1.7em;
+    text-align: center;
   }
 
-  .fc .fc-daygrid-day-frame:hover .fc-daygrid-day-number,
-  .fc-daygrid-day.selected .fc-daygrid-day-number {
+  .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    background: rgba(0, 0, 0, 0.07);
+    border-radius: 0.5em;
+  }
+
+  .fc .fc-daygrid-day-frame .fc-daygrid-day-number:hover,
+  .fc .fc-daygrid-day.selected .fc-daygrid-day-number {
+    cursor: pointer;
     background: rgb(134, 177, 205, 0.5);
-    border-radius: 0.2em;
+    border-radius: 0.5em;
   }
 
   .fc-h-event .fc-event-title-container {
@@ -115,11 +123,6 @@ const Container = styled.div`
     opacity: 0.3;
   }
 
-  .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 0.2em;
-  }
-
   .fc-daygrid-dot-event.fc-event-mirror,
   .fc-daygrid-dot-event:hover,
   .fc .fc-highlight,
@@ -142,18 +145,20 @@ function App() {
     setClickDate(arg.dateStr);
   };
 
-  const handleEventClick = (clickInfo) => {
+  function handleEventClick(clickInfo) {
     hasClass = document.querySelector(".selected");
     hasClass && hasClass.classList.remove("selected");
+    console.log(clickInfo);
     clickInfo.jsEvent.path[7].classList += " selected";
     setClickDate(clickInfo.event.startStr.split("T")[0]);
-  };
+  }
 
   const moreClick = (info) => {
-    hasClass = document.querySelector(".selected");
-    hasClass && hasClass.classList.remove("selected");
-    info.jsEvent.path[4].classList += " selected";
-    setClickDate(info.date.toISOString().split("T")[0]);
+    // hasClass = document.querySelector(".selected");
+    // hasClass && hasClass.classList.remove("selected");
+    // console.log(info);
+    // info.jsEvent.path[4].classList += " selected";
+    // setClickDate(info.date.toISOString().split("T")[0]);
     return "month";
   };
 
@@ -178,10 +183,7 @@ function App() {
           dateClick={handleDateClick}
           dayMaxEvents={true}
           moreLinkClick={moreClick}
-          // editable={true}
-          // selectMirror={true}
-          eventClick={handleEventClick}
-          // eventContent={renderEventContent}
+          // eventClick={handleEventClick}
         />
         <Detail />
       </Container>

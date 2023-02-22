@@ -49,3 +49,8 @@
   height: 100vh;
   background: #f0f1f4;
 }
+
+body {
+  padding: 0;
+  margin: 0;
+}

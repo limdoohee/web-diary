@@ -1,4 +1,14 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist();
+
+export const userState = atom({
+  key: "userState",
+  default: null,
+  storage: localStorage,
+  effects_UNSTABLE: [persistAtom],
+});
 
 export const clickDateState = atom({
   key: "clickDateState",
@@ -18,4 +28,6 @@ export const newTitleState = atom({
 export const userUID = atom({
   key: "userUID",
   default: "temp",
+  storage: localStorage,
+  effects_UNSTABLE: [persistAtom],
 });

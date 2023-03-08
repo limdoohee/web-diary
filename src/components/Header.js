@@ -7,7 +7,7 @@ import {
   getRedirectResult,
 } from "firebase/auth";
 import { useRecoilState } from "recoil";
-import { userUID } from "../recoil/atoms";
+import { userUID, userState } from "../recoil/atoms";
 
 const Header = styled.header`
   border-bottom: 1px solid #f0f1f4;
@@ -36,7 +36,7 @@ const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 const UserInfo = () => {
-  const [userName, setUserName] = useState(null);
+  const [userName, setUserName] = useRecoilState(userState);
   const [userID, setUserID] = useRecoilState(userUID);
 
   useEffect(() => {
@@ -46,6 +46,8 @@ const UserInfo = () => {
   const loginHandler = async () => {
     try {
       const result = await getRedirectResult(auth);
+      console.log(result);
+
       if (result !== null) {
         setUserID(result.user.uid);
         setUserName(result.user.displayName);

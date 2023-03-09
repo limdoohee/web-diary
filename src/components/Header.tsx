@@ -26,7 +26,7 @@ const NotLoggedIn = styled.div`
   font-weight: 300;
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{ userName: string }>`
   cursor: ${(props) => props.userName === null && "pointer"};
   text-align: right;
   font-size: 0.9em;

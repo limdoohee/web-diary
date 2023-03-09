@@ -153,14 +153,15 @@ function App() {
     setClickDate(clickInfo.event.startStr.split("T")[0]);
   }
 
-  // const moreClick = (info) => {
-  // hasClass = document.querySelector(".selected");
-  // hasClass && hasClass.classList.remove("selected");
-  // console.log(info);
-  // info.jsEvent.path[4].classList += " selected";
-  // setClickDate(info.date.toISOString().split("T")[0]);
-  //   return "month";
-  // };
+  const moreClick = (info: any) => {
+    hasClass = document.querySelector(".selected");
+    hasClass && hasClass.classList.remove("selected");
+    document
+      .querySelector(`[data-date="${info.date.toISOString().split("T")[0]}"]`)
+      ?.classList.add("selected");
+    setClickDate(info.date.toISOString().split("T")[0]);
+    return "month";
+  };
 
   return (
     <Wrapper>
@@ -182,7 +183,7 @@ function App() {
           }}
           dateClick={handleDateClick}
           dayMaxEvents={true}
-          // moreLinkClick={moreClick}
+          moreLinkClick={moreClick}
           // eventClick={handleEventClick}
         />
         <Detail />

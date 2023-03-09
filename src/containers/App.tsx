@@ -136,31 +136,31 @@ const Container = styled.div`
 function App() {
   const setClickDate = useSetRecoilState(clickDateState);
   const data = useRecoilValue(loadData);
-  let hasClass = "";
+  let hasClass = null;
 
-  const handleDateClick = (arg) => {
+  const handleDateClick = (arg: any) => {
     hasClass = document.querySelector(".selected");
-    hasClass && hasClass.classList.remove("selected");
+    hasClass && hasClass?.classList.remove("selected");
     arg.dayEl.className += " selected";
     setClickDate(arg.dateStr);
   };
 
-  function handleEventClick(clickInfo) {
+  function handleEventClick(clickInfo: any) {
     hasClass = document.querySelector(".selected");
-    hasClass && hasClass.classList.remove("selected");
+    hasClass && hasClass?.classList.remove("selected");
     console.log(clickInfo);
     clickInfo.jsEvent.path[7].classList += " selected";
     setClickDate(clickInfo.event.startStr.split("T")[0]);
   }
 
-  const moreClick = (info) => {
-    // hasClass = document.querySelector(".selected");
-    // hasClass && hasClass.classList.remove("selected");
-    // console.log(info);
-    // info.jsEvent.path[4].classList += " selected";
-    // setClickDate(info.date.toISOString().split("T")[0]);
-    return "month";
-  };
+  // const moreClick = (info) => {
+  // hasClass = document.querySelector(".selected");
+  // hasClass && hasClass.classList.remove("selected");
+  // console.log(info);
+  // info.jsEvent.path[4].classList += " selected";
+  // setClickDate(info.date.toISOString().split("T")[0]);
+  //   return "month";
+  // };
 
   return (
     <Wrapper>
@@ -182,7 +182,7 @@ function App() {
           }}
           dateClick={handleDateClick}
           dayMaxEvents={true}
-          moreLinkClick={moreClick}
+          // moreLinkClick={moreClick}
           // eventClick={handleEventClick}
         />
         <Detail />

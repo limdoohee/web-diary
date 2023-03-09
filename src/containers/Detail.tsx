@@ -13,6 +13,7 @@ import { clickDateState, userUID } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { message } from "antd";
+import { SaveDataType } from "@/types";
 
 const Wrapper = styled.div`
   width: 35%;
@@ -42,13 +43,20 @@ const ContentsWrapper = styled.ul`
   flex-grow: 1;
 `;
 
+interface Test {
+  id: string;
+  color: string;
+  className: string;
+  display: string;
+}
+
 const Detail = () => {
   const [data, setData] = useRecoilState(loadData);
   const clickDate = useRecoilValue(clickDateState);
   const userID = useRecoilValue(userUID);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const success = (message) => {
+  const success = (message: string) => {
     messageApi.open({
       type: "success",
       content: `successfully ${message}!`,
@@ -56,7 +64,7 @@ const Detail = () => {
     });
   };
 
-  const addHandler = async (newData) => {
+  const addHandler = async (newData: SaveDataType) => {
     try {
       await addDoc(collection(db, `data/${userID}/list`), {
         ...(newData.start ? { start: newData.start } : { start: clickDate }),
@@ -73,13 +81,18 @@ const Detail = () => {
               ? { start: newData.start }
               : { start: clickDate }),
             ...(newData.end && { end: newData.end }),
-            ...(newData.title && { title: newData.title, color: "#A3BB98" }),
-            ...(newData.diary && {
-              diary: newData.diary,
-              color: "#FBC252",
-              className: "fc-diary",
-              display: "list-item",
-            }),
+            // ...(newData.title && { title: newData.title, color: "#A3BB98" }),
+            ...(newData.diary
+              ? {
+                  diary: newData.diary,
+                  color: "#FBC252",
+                  className: "fc-diary",
+                  display: "list-item",
+                }
+              : {
+                  title: newData.title,
+                  color: "#A3BB98",
+                }),
           },
         ]);
       });
@@ -88,7 +101,7 @@ const Detail = () => {
     }
   };
 
-  const updateHandler = async (newData) => {
+  const updateHandler = async (newData: SaveDataType) => {
     try {
       await updateDoc(doc(db, `data/${userID}/list`, newData.id), {
         ...(newData.start ? { start: newData.start } : { start: clickDate }),
@@ -105,13 +118,18 @@ const Detail = () => {
               ? { start: newData.start }
               : { start: clickDate }),
             ...(newData.end && { end: newData.end }),
-            ...(newData.title && { title: newData.title, color: "#A3BB98" }),
-            ...(newData.diary && {
-              diary: newData.diary,
-              color: "#FBC252",
-              className: "fc-diary",
-              display: "list-item",
-            }),
+            // ...(newData.title && { title: newData.title, color: "#A3BB98" }),
+            ...(newData.diary
+              ? {
+                  diary: newData.diary,
+                  color: "#FBC252",
+                  className: "fc-diary",
+                  display: "list-item",
+                }
+              : {
+                  title: newData.title,
+                  color: "#A3BB98",
+                }),
           },
         ]);
       });
@@ -120,7 +138,7 @@ const Detail = () => {
     }
   };
 
-  const deleteHandler = async (newData) => {
+  const deleteHandler = async (newData: SaveDataType) => {
     try {
       await deleteDoc(doc(db, `data/${userID}/list`, newData.id)).then(
         (res) => {
@@ -133,7 +151,7 @@ const Detail = () => {
     }
   };
 
-  const saveHandler = async (newData, type) => {
+  const saveHandler = async (newData: SaveDataType, type: string) => {
     try {
       switch (type) {
         case "add":

@@ -21,6 +21,7 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
+  height: calc(100% - 4em);
   display: flex;
   justify-content: center;
   flex: 1 0 auto;
@@ -40,7 +41,7 @@ const Container = styled.div`
     color: #808080;
   }
   .fc .fc-toolbar.fc-header-toolbar {
-    margin: 2em 0;
+    margin: 1.5em 0 1em;
   }
   // .fc .fc-daygrid-day-frame:hover {
   //   cursor: pointer;
@@ -148,8 +149,9 @@ function App() {
   function handleEventClick(clickInfo: any) {
     hasClass = document.querySelector(".selected");
     hasClass && hasClass?.classList.remove("selected");
-    console.log(clickInfo);
-    clickInfo.jsEvent.path[7].classList += " selected";
+    document
+      .querySelector(`[data-date="${clickInfo.event.startStr.split("T")[0]}"]`)
+      ?.classList.add("selected");
     setClickDate(clickInfo.event.startStr.split("T")[0]);
   }
 
@@ -184,7 +186,7 @@ function App() {
           dateClick={handleDateClick}
           dayMaxEvents={true}
           moreLinkClick={moreClick}
-          // eventClick={handleEventClick}
+          eventClick={handleEventClick}
         />
         <Detail />
       </Container>

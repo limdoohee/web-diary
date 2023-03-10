@@ -12,7 +12,8 @@ import {
 import { clickDateState, userUID } from "../recoil/atoms";
 import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { message } from "antd";
+import { message, Tabs } from "antd";
+import type { TabsProps } from "antd";
 import { SaveDataType } from "@/types";
 
 const Wrapper = styled.div`
@@ -24,7 +25,7 @@ const Wrapper = styled.div`
   padding: 0 2.5%;
   > div {
     &:nth-child(1) {
-      margin: 2.2em 0 1.5em;
+      padding: 1.9em 0 1.2em;
     }
   }
 `;
@@ -35,20 +36,6 @@ const Date = styled.h1`
   color: #808080;
   font-weight: 100;
 `;
-
-const ContentsWrapper = styled.ul`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex-grow: 1;
-`;
-
-interface Test {
-  id: string;
-  color: string;
-  className: string;
-  display: string;
-}
 
 const Detail = () => {
   const [data, setData] = useRecoilState(loadData);
@@ -81,13 +68,14 @@ const Detail = () => {
               ? { start: newData.start }
               : { start: clickDate }),
             ...(newData.end && { end: newData.end }),
-            // ...(newData.title && { title: newData.title, color: "#A3BB98" }),
+            ...(newData.title && { title: newData.title, color: "#A3BB98" }),
             ...(newData.diary
               ? {
                   diary: newData.diary,
                   color: "#FBC252",
                   className: "fc-diary",
                   display: "list-item",
+                  title: "일기",
                 }
               : {
                   title: newData.title,
@@ -118,13 +106,14 @@ const Detail = () => {
               ? { start: newData.start }
               : { start: clickDate }),
             ...(newData.end && { end: newData.end }),
-            // ...(newData.title && { title: newData.title, color: "#A3BB98" }),
+            ...(newData.title && { title: newData.title, color: "#A3BB98" }),
             ...(newData.diary
               ? {
                   diary: newData.diary,
                   color: "#FBC252",
                   className: "fc-diary",
                   display: "list-item",
+                  title: "일기",
                 }
               : {
                   title: newData.title,
@@ -171,16 +160,26 @@ const Detail = () => {
     }
   };
 
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: `Task`,
+      children: <Task saveHandler={saveHandler} />,
+    },
+    {
+      key: "2",
+      label: `Diary`,
+      children: <Diary saveHandler={saveHandler} />,
+    },
+  ];
+
   return (
     <Wrapper>
       {contextHolder}
       <div>
         <Date>{clickDate}</Date>
       </div>
-      <ContentsWrapper>
-        <Task saveHandler={saveHandler} />
-        <Diary saveHandler={saveHandler} />
-      </ContentsWrapper>
+      <Tabs defaultActiveKey="1" items={items} />
     </Wrapper>
   );
 };

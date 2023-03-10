@@ -1,4 +1,4 @@
-import { selector, atom, useRecoilValue } from "recoil";
+import { selector, atom } from "recoil";
 import { db } from "../Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { clickDateState } from "./atoms";
@@ -19,6 +19,7 @@ export const initailData = selector({
                 color: "#FBC252",
                 className: "fc-diary",
                 display: "list-item",
+                title: "일기",
               };
             } else {
               return {

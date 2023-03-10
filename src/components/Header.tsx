@@ -46,7 +46,6 @@ const UserInfo = () => {
   const loginHandler = async () => {
     try {
       const result = await getRedirectResult(auth);
-      console.log(result);
 
       if (result !== null) {
         setUserID(result.user.uid);

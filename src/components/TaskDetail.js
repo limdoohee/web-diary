@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { clickDateState } from "../recoil/atoms";
-
 import {
   EditOutlined,
   DeleteOutlined,

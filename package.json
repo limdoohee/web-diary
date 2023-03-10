@@ -26,7 +26,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "webpack --config config/webpack.prod.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "webpack-dev-server --config config/webpack.dev.js"

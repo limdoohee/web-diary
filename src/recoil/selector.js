@@ -2,36 +2,41 @@ import { selector, atom } from "recoil";
 import { db } from "../Firebase/Firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { clickDateState } from "./atoms";
+import { userUID } from "./atoms";
 
 export const initailData = selector({
   key: "initailData",
   get: async ({ get }) => {
-    return await getDocs(collection(db, "date")).then((querySnapshot) => {
-      const newData = querySnapshot.docs
-        .map((doc) => {
-          if (!doc.data().title) {
-            return {
-              ...doc.data(),
-              id: doc.id,
-              color: "#FBC252",
-              className: "fc-diary",
-              display: "list-item",
-            };
-          } else {
-            return {
-              ...doc.data(),
-              id: doc.id,
-              color: "#A3BB98",
-            };
-          }
-        })
-        .map((arr) => {
-          return arr.end
-            ? { ...arr, dateList: getDateList(arr.start, arr.end) }
-            : { ...arr };
-        });
-      return newData;
-    });
+    const userID = get(userUID);
+    return await getDocs(collection(db, `data/${userID}/list`)).then(
+      (querySnapshot) => {
+        const newData = querySnapshot.docs
+          .map((doc) => {
+            if (!doc.data().title) {
+              return {
+                ...doc.data(),
+                id: doc.id,
+                color: "#FBC252",
+                className: "fc-diary",
+                display: "list-item",
+                title: "일기",
+              };
+            } else {
+              return {
+                ...doc.data(),
+                id: doc.id,
+                color: "#A3BB98",
+              };
+            }
+          })
+          .map((arr) => {
+            return arr.end
+              ? { ...arr, dateList: getDateList(arr.start, arr.end) }
+              : { ...arr };
+          });
+        return newData;
+      }
+    );
   },
 });
 

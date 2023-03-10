@@ -1,19 +1,22 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isAddTask, newTitleState, clickDateState } from "../recoil/atoms";
-import { SaveOutlined, CloseOutlined } from "@ant-design/icons";
-import { DatePicker, Select, Space, TimePicker, Button, message } from "antd";
+import { newTitleState, clickDateState } from "../recoil/atoms";
+import { SaveOutlined } from "@ant-design/icons";
+import {
+  DatePicker,
+  Select,
+  Space,
+  TimePicker,
+  Button,
+  message,
+  Input,
+} from "antd";
 import dayjs from "dayjs";
 const { Option } = Select;
 
 const Task = styled.ul`
-  display: ${({ isAdd }) => (isAdd ? "block" : "none")}};
-  border-bottom: 1px solid #eee;
-  padding: 1em;
-  .mgR5 {
-    margin-right: 0.5em;
-  }
+  padding: 1em 0;
 `;
 
 const InsertTitle = styled.li`
@@ -22,19 +25,15 @@ const InsertTitle = styled.li`
   justify-content: space-between;
   align-items: center;
   input {
-    outline: 1px solid #ddd;
-    border-radius: 0.2em;
-    padding: 0.3em;
-    font-size: 1.1em;
     color: rgba(0, 0, 0, 0.8);
     width: calc(100% - 100px);
   }
 `;
 
-const InsertTime = styled.div``;
+const InsertTime = styled.li``;
 
 const NewTask = ({ saveHandler }) => {
-  const [isAdd, setIsAdd] = useRecoilState(isAddTask);
+  // const [isAdd, setIsAdd] = useRecoilState(isAddTask);
   const [newTitle, setNewTitle] = useRecoilState(newTitleState);
   const clickDate = useRecoilValue(clickDateState);
   const newTaskRef = useRef();
@@ -43,13 +42,10 @@ const NewTask = ({ saveHandler }) => {
   const [end, setEnd] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
-  useEffect(() => {
-    newTaskRef.current.focus();
-  }, [isAdd]);
-
   const changeHandler = (e) => {
     setNewTitle(e.target.value);
   };
+
   const clickHandler = () => {
     if (newTitle.trim() === "") {
       messageApi.open({
@@ -70,9 +66,8 @@ const NewTask = ({ saveHandler }) => {
         },
         "add"
       ).then(() => {
-        setIsAdd(!isAdd);
         setNewTitle("");
-        setType("");
+        setType("time");
         setTime("");
         setEnd("");
       });
@@ -86,11 +81,6 @@ const NewTask = ({ saveHandler }) => {
   const endChangeHandler = (date, dateString) => {
     setEnd(date);
     setTime("");
-  };
-
-  const cancelHandler = () => {
-    setNewTitle("");
-    setIsAdd(false);
   };
 
   const disabledDate = (current) => {
@@ -127,16 +117,13 @@ const NewTask = ({ saveHandler }) => {
   };
 
   return (
-    <Task isAdd={isAdd}>
+    <Task>
       {contextHolder}
       <InsertTitle>
-        <input
-          type="text"
-          value={newTitle}
-          ref={newTaskRef}
+        <Input
           placeholder="Insert your task"
-          required
           onChange={changeHandler}
+          value={newTitle}
         />
         <Space>
           <Button
@@ -144,21 +131,16 @@ const NewTask = ({ saveHandler }) => {
             icon={<SaveOutlined />}
             onClick={clickHandler}
           />
-          <Button
-            shape="circle"
-            icon={<CloseOutlined />}
-            onClick={cancelHandler}
-          />
         </Space>
       </InsertTitle>
       <InsertTime>
-        <Space>
-          <Select value={type} onChange={setType}>
+        <Input.Group compact style={{ width: "calc(100% - 100px)" }}>
+          <Select value={type} onChange={setType} style={{ width: "100px" }}>
             <Option value="time">Time</Option>
             <Option value="date">End</Option>
           </Select>
           <PickerWithType type={type} />
-        </Space>
+        </Input.Group>
       </InsertTime>
     </Task>
   );

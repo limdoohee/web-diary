@@ -49,3 +49,46 @@
   height: 100vh;
   background: #f0f1f4;
 }
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.fc-scroller-harness {
+  padding: 1em 0 2em;
+}
+
+:where(.css-dev-only-do-not-override-sk7ap8).ant-tabs
+  .ant-tabs-tab.ant-tabs-tab-active
+  .ant-tabs-tab-btn,
+:where(.css-sk7ap8).ant-tabs
+  .ant-tabs-tab.ant-tabs-tab-active
+  .ant-tabs-tab-btn {
+  color: rgb(245 166 37);
+}
+
+:where(.css-dev-only-do-not-override-sk7ap8).ant-tabs .ant-tabs-ink-bar,
+:where(.css-sk7ap8).ant-tabs .ant-tabs-ink-bar {
+  background-color: rgb(245 166 37);
+}
+
+:where(.css-dev-only-do-not-override-sk7ap8).ant-tabs .ant-tabs-tab:hover,
+:where(.css-sk7ap8).ant-tabs .ant-tabs-tab:hover {
+  color: rgb(245 166 37 / 70%);
+}
+
+:where(.css-dev-only-do-not-override-sk7ap8).ant-tabs,
+:where(.css-sk7ap8).ant-tabs,
+.ant-tabs-content-holder {
+  flex: 1;
+}
+
+.ant-tabs-content.ant-tabs-content-top,
+.ant-tabs-tabpane.ant-tabs-tabpane-active {
+  height: 100%;
+}
+
+.ant-picker {
+  width: calc(100% - 100px);
+}

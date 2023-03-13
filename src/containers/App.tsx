@@ -43,9 +43,6 @@ const Container = styled.div`
   .fc .fc-toolbar.fc-header-toolbar {
     margin: 1.5em 0 1em;
   }
-  // .fc .fc-daygrid-day-frame:hover {
-  //   cursor: pointer;
-  // }
 
   .fc .fc-daygrid-day-number {
     padding: 2px 0;

@@ -17,7 +17,7 @@ const Editor = styled.textarea`
   }
 `;
 
-const Diary = ({ saveHandler }) => {
+const Diary = ({ addHandler, updateHandler }) => {
   const diaryData = useRecoilValue(diaryDataState);
   const [contents, setContents] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
@@ -41,8 +41,8 @@ const Diary = ({ saveHandler }) => {
       contentsRef.current.focus();
     } else {
       diaryData
-        ? saveHandler({ id: diaryData.id, diary: contents }, "update")
-        : saveHandler({ diary: contents }, "add");
+        ? updateHandler({ id: diaryData.id, diary: contents })
+        : addHandler({ diary: contents });
     }
   };
   return (

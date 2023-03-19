@@ -49,7 +49,7 @@ const Time = styled.p`
 
 const InsertTime = styled.li``;
 
-const TaskDetail = ({ data, saveHandler }) => {
+const TaskList = ({ data, updateHandler, deleteHandler }) => {
   const [title, setTitle] = useState("");
   const clickDate = useRecoilValue(clickDateState);
   const [edit, setEdit] = useState(false);
@@ -80,8 +80,8 @@ const TaskDetail = ({ data, saveHandler }) => {
     setTitle(e.target.value);
   };
 
-  const updateHandler = () => {
-    saveHandler(
+  const updateClickHandler = () => {
+    updateHandler(
       {
         id: data.id,
         title: title,
@@ -101,8 +101,8 @@ const TaskDetail = ({ data, saveHandler }) => {
     });
   };
 
-  const deleteHandler = () => {
-    saveHandler({ id: data.id }, "delete");
+  const deleteClickHandler = () => {
+    deleteHandler({ id: data.id }, "delete");
   };
 
   const timeChangeHandler = (time, timeString) => {
@@ -165,7 +165,7 @@ const TaskDetail = ({ data, saveHandler }) => {
               <Button
                 shape="circle"
                 icon={<SaveOutlined />}
-                onClick={updateHandler}
+                onClick={updateClickHandler}
               />
               <Button
                 shape="circle"
@@ -183,7 +183,7 @@ const TaskDetail = ({ data, saveHandler }) => {
               <Button
                 shape="circle"
                 icon={<DeleteOutlined />}
-                onClick={deleteHandler}
+                onClick={deleteClickHandler}
               />
             </>
           )}
@@ -213,4 +213,4 @@ const TaskDetail = ({ data, saveHandler }) => {
   );
 };
 
-export default TaskDetail;
+export default TaskList;

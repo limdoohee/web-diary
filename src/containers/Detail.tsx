@@ -1,4 +1,4 @@
-import Task from "./Task";
+import Task from "../components/Task";
 import styled from "styled-components";
 import Diary from "../components/Diary";
 import { db } from "../Firebase/Firebase";
@@ -14,7 +14,7 @@ import { loadData } from "../recoil/selector";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { message, Tabs } from "antd";
 import type { TabsProps } from "antd";
-import { SaveDataType } from "@/types";
+import { NewDataType, NewDataTypeWithID } from "@/types";
 
 const Wrapper = styled.div`
   width: 35%;
@@ -51,7 +51,7 @@ const Detail = () => {
     });
   };
 
-  const addHandler = async (newData: SaveDataType) => {
+  const addHandler = async (newData: NewDataType) => {
     try {
       await addDoc(collection(db, `data/${userID}/list`), {
         ...(newData.start ? { start: newData.start } : { start: clickDate }),
@@ -89,7 +89,7 @@ const Detail = () => {
     }
   };
 
-  const updateHandler = async (newData: SaveDataType) => {
+  const updateHandler = async (newData: NewDataTypeWithID) => {
     try {
       await updateDoc(doc(db, `data/${userID}/list`, newData.id), {
         ...(newData.start ? { start: newData.start } : { start: clickDate }),
@@ -127,7 +127,7 @@ const Detail = () => {
     }
   };
 
-  const deleteHandler = async (newData: SaveDataType) => {
+  const deleteHandler = async (newData: NewDataTypeWithID) => {
     try {
       await deleteDoc(doc(db, `data/${userID}/list`, newData.id)).then(
         (res) => {
@@ -140,36 +140,22 @@ const Detail = () => {
     }
   };
 
-  const saveHandler = async (newData: SaveDataType, type: string) => {
-    try {
-      switch (type) {
-        case "add":
-          addHandler(newData);
-          break;
-        case "update":
-          updateHandler(newData);
-          break;
-        case "delete":
-          deleteHandler(newData);
-          break;
-        default:
-          break;
-      }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
-
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: `Task`,
-      children: <Task saveHandler={saveHandler} />,
+      children: (
+        <Task
+          addHandler={addHandler}
+          updateHandler={updateHandler}
+          deleteHandler={deleteHandler}
+        />
+      ),
     },
     {
       key: "2",
       label: `Diary`,
-      children: <Diary saveHandler={saveHandler} />,
+      children: <Diary addHandler={addHandler} updateHandler={updateHandler} />,
     },
   ];
 

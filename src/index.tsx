@@ -4,7 +4,7 @@ import "./style/common.css";
 import App from "./containers/App";
 import { GlobalStyle } from "./style/global";
 import { RecoilRoot } from "recoil";
-import Loading from "./containers/Loading";
+import Loading from "./components/Loading";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(

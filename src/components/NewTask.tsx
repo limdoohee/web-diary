@@ -13,6 +13,10 @@ import {
   Input,
 } from "antd";
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
+import type { RangePickerProps } from "antd/es/date-picker";
+import { NewDataType } from "@/types";
+
 const { Option } = Select;
 
 const Task = styled.ul`
@@ -32,17 +36,17 @@ const InsertTitle = styled.li`
 
 const InsertTime = styled.li``;
 
-const NewTask = ({ saveHandler }) => {
-  // const [isAdd, setIsAdd] = useRecoilState(isAddTask);
+const NewTask: React.FC<{
+  addHandler: (newData: NewDataType) => Promise<void>;
+}> = ({ addHandler }) => {
   const [newTitle, setNewTitle] = useRecoilState(newTitleState);
   const clickDate = useRecoilValue(clickDateState);
-  const newTaskRef = useRef();
-  const [type, setType] = useState("time");
-  const [time, setTime] = useState("");
-  const [end, setEnd] = useState("");
+  const [type, setType] = useState<string>("time");
+  const [time, setTime] = useState<Dayjs | null>(null);
+  const [end, setEnd] = useState<Dayjs | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const changeHandler = (e) => {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(e.target.value);
   };
 
@@ -53,65 +57,49 @@ const NewTask = ({ saveHandler }) => {
         content: "Please enter your task",
         duration: 2,
       });
-      newTaskRef.current.focus();
     } else {
-      saveHandler(
-        {
-          title: newTitle,
-          ...(time && {
-            start:
-              clickDate + "T" + new Date(time).toTimeString().split(" ")[0],
-          }),
-          ...(end && { end: dayjs(end).format("YYYY-MM-DD") }),
-        },
-        "add"
-      ).then(() => {
+      addHandler({
+        title: newTitle,
+        ...(time && {
+          start: clickDate + "T" + dayjs(time).format("HH:mm:ss"),
+        }),
+        ...(end && { end: dayjs(end).format("YYYY-MM-DD") }),
+      }).then(() => {
         setNewTitle("");
         setType("time");
-        setTime("");
-        setEnd("");
+        setTime(null);
+        setEnd(null);
       });
     }
   };
 
-  const timeChangeHandler = (time, timeString) => {
+  const timeChangeHandler = (time: Dayjs | null) => {
     setTime(time);
-    setEnd("");
+    setEnd(null);
   };
-  const endChangeHandler = (date, dateString) => {
+  const endChangeHandler = (date: Dayjs | null) => {
     setEnd(date);
-    setTime("");
+    setTime(null);
   };
 
-  const disabledDate = (current) => {
+  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
     return current && current < dayjs(clickDate, "YYYY-MM-DD").add(1, "day");
   };
 
-  const PickerWithType = ({ type }) => {
-    if (type === "time")
-      return (
-        <TimePicker
-          value={time}
-          format={"HH:mm"}
-          onChange={timeChangeHandler}
-          readOnly="true"
-          inputReadOnly={true}
-        />
-      );
-    if (type === "date")
-      return (
-        <DatePicker
-          value={end}
-          onChange={endChangeHandler}
-          disabledDate={disabledDate}
-          readOnly="true"
-          inputReadOnly={true}
-        />
-      );
-    return (
+  const PickerWithType = ({ type }: { type: string }) => {
+    return type === "time" ? (
+      <TimePicker
+        value={time}
+        format={"HH:mm"}
+        onChange={timeChangeHandler}
+        inputReadOnly={true}
+      />
+    ) : (
       <DatePicker
-        picker={type}
-        onChange={(date, dateString) => setEnd(dateString)}
+        value={end}
+        onChange={endChangeHandler}
+        disabledDate={disabledDate}
+        inputReadOnly={true}
       />
     );
   };

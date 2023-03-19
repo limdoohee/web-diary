@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserInfo from "../components/Header";
+import UserInfo from "./Header";
 import { Skeleton, Divider, Space } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 

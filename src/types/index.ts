@@ -1,7 +1,14 @@
-export interface SaveDataType {
-  id: string;
-  start: string;
-  end: string;
+export interface NewDataType {
   title: string;
-  diary: string;
+  start?: string;
+  end?: string;
+  diary?: string;
+}
+
+export interface NewDataTypeWithID {
+  id: string;
+  title: string;
+  start: string;
+  end?: string;
+  diary?: string;
 }

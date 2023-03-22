@@ -102,7 +102,7 @@ const TaskList = ({ data, updateHandler, deleteHandler }) => {
   };
 
   const deleteClickHandler = () => {
-    deleteHandler({ id: data.id }, "delete");
+    deleteHandler(data.id);
   };
 
   const timeChangeHandler = (time, timeString) => {

@@ -127,14 +127,12 @@ const Detail = () => {
     }
   };
 
-  const deleteHandler = async (newData: NewDataTypeWithID) => {
+  const deleteHandler = async (id: string) => {
     try {
-      await deleteDoc(doc(db, `data/${userID}/list`, newData.id)).then(
-        (res) => {
-          success("deleted");
-          setData(data.filter((e) => e.id !== newData.id));
-        }
-      );
+      await deleteDoc(doc(db, `data/${userID}/list`, id)).then((res) => {
+        success("deleted");
+        setData(data.filter((e) => e.id !== id));
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
     }
